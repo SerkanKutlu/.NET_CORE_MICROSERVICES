@@ -6,6 +6,9 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Events;
 
 namespace CustomerService.Common;
 
@@ -20,7 +23,16 @@ public static class CommonExtensions
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
         return services;
     }
-
+    public static void AddSeriLogConfiguration(this WebApplicationBuilder builder)
+    {
+        var logger = new LoggerConfiguration().ReadFrom.Configuration(builder.Configuration)
+            .Enrich
+            .FromLogContext()
+            .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+            .CreateLogger();
+        builder.Logging.ClearProviders();
+        builder.Logging.AddSerilog(logger);
+    }
 
     public static IApplicationBuilder UseExceptionMiddleware(this IApplicationBuilder app)
     {

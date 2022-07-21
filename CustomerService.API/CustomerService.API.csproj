@@ -14,7 +14,6 @@
       <ProjectReference Include="..\CustomerService.Core\CustomerService.Core.csproj" />
       <ProjectReference Include="..\CustomerService.Data\CustomerService.Data.csproj" />
       <ProjectReference Include="..\CustomerService.Entity\CustomerService.Entity.csproj" />
-      <ProjectReference Include="..\CustomerService.Logger\CustomerService.Logger.csproj" />
       <ProjectReference Include="..\CustomerService.Repository\CustomerService.Repository.csproj" />
     </ItemGroup>
 
