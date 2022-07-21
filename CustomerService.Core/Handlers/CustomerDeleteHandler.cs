@@ -1,4 +1,4 @@
-﻿using CustomerService.Repository.Interfaces;
+﻿using CustomerService.Repository.CustomerRepository;
 
 namespace CustomerService.Core.Handlers;
 

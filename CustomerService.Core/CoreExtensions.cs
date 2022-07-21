@@ -10,7 +10,7 @@ namespace CustomerService.Core;
 
 public static class CoreExtensions
 {
-    public static IServiceCollection AddDataServices(this IServiceCollection services, ConfigurationManager configuration)
+    public static IServiceCollection AddCoreServices(this IServiceCollection services, ConfigurationManager configuration)
     {
         services.Configure<HttpClientProperty>(configuration.GetSection(nameof(HttpClientProperty)));
         services.AddSingleton<IHttpClientProperty>(provider=>provider.GetRequiredService<IOptions<HttpClientProperty>>().Value);

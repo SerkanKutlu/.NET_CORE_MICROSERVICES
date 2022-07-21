@@ -1,4 +1,7 @@
-﻿namespace CustomerService.Entity.Models;
+﻿
+using CustomerService.Common.Exceptions;
+
+namespace CustomerService.Common.Models;
 
 public class RequestParameters
 {
@@ -14,7 +17,7 @@ public class RequestParameters
     public int PageSize
     {
         get => _pageSize;
-        //set => _pageSize = (value > MaxPageSize) ? throw ...: value;
+        set => _pageSize = (value > MaxPageSize) ? throw new InvalidModelException($"Max Page Size can not be greater than {MaxPageSize} "): value; 
     }
     public string SearchTerm { get; set; }
     public string OrderBy { get; set; }

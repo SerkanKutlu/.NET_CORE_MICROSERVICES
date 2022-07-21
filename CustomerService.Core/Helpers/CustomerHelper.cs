@@ -2,7 +2,7 @@
 using CustomerService.Common.Exceptions;
 using CustomerService.Core.Handlers;
 using CustomerService.Entity.Models;
-using CustomerService.Repository.Interfaces;
+using CustomerService.Repository.CustomerRepository;
 
 namespace CustomerService.Core.Helpers;
 

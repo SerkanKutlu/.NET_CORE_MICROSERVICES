@@ -1,5 +1,6 @@
 using CustomerService.Common;
 using CustomerService.Common.Exceptions;
+using CustomerService.Core;
 using CustomerService.Data;
 using CustomerService.Repository;
 using Microsoft.AspNetCore.Mvc;
@@ -42,7 +43,7 @@ builder.Services.AddDataServices(builder.Configuration);
 builder.Services.AddCommonExtensions(builder.Configuration);
 builder.Services.AddRepositoryExtensions(builder.Configuration);
 builder.AddSeriLogConfiguration();
-
+builder.Services.AddCoreServices(builder.Configuration);
 #endregion
 #endregion
 

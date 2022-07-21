@@ -1,9 +1,13 @@
-﻿using AutoMapper;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+using AutoMapper;
 using CustomerService.Common.DTO;
+using CustomerService.Common.Models;
 using CustomerService.Core.Helpers;
 using CustomerService.Entity.Models;
-using CustomerService.Repository.Interfaces;
+using CustomerService.Repository.CustomerRepository;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson.IO;
 
 namespace CustomerService.API.Controllers;
 
@@ -35,6 +39,7 @@ public class CustomersController : ControllerBase
     public async Task<IActionResult> GetAll([FromQuery] RequestParameters requestParameters)
     {
         var customers =await _customerRepository.GetAll(requestParameters);
+        Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(customers.MetaData));
         _logger.LogInformation("Getting all customers data's from database");
         return Ok(customers);
     }
