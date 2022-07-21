@@ -1,7 +1,4 @@
-﻿using CustomerService.Data.Mongo;
-using CustomerService.Entity.Models;
-using Microsoft.AspNetCore.Mvc;
-using MongoDB.Driver;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace CustomerService.API.Controllers;
 
@@ -9,12 +6,20 @@ namespace CustomerService.API.Controllers;
 [Route("api/[controller]")]
 public class CustomersController : ControllerBase
 {
-    private readonly IMongoService _mongo;
+    private readonly ILogger<CustomersController> _logger;
+    
 
-    public CustomersController(IMongoService mongo)
+    public CustomersController(ILogger<CustomersController> logger)
     {
-        _mongo = mongo;
+        _logger = logger;
     }
 
-    
+    [HttpGet]
+    public IActionResult denemeGt()
+    {
+        _logger.LogInformation("LOG FROM GET ENDPOINT");
+        return Ok();
+    }
+
+
 }
