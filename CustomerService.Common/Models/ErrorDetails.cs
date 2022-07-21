@@ -1,4 +1,6 @@
-﻿namespace CustomerService.Common.Models;
+﻿using System.Text.Json;
+
+namespace CustomerService.Common.Models;
 
 public class ErrorDetails
 {
@@ -9,5 +11,10 @@ public class ErrorDetails
     {
         Message = message;
         StatusCode = code;
+    }
+
+    public override string ToString()
+    {
+        return JsonSerializer.Serialize(this);
     }
 }

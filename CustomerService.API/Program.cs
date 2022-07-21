@@ -56,7 +56,7 @@ builder.AddSeriLogConfiguration();
 
 
 var app = builder.Build();
-app.UseExceptionMiddleware();
+
 
 #region Pipeline
 
@@ -66,6 +66,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseExceptionMiddleware();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

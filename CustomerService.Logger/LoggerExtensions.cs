@@ -12,7 +12,7 @@ public static class LoggerExtensions
         var logger = new LoggerConfiguration().ReadFrom.Configuration(builder.Configuration)
             .Enrich
             .FromLogContext()
-            .MinimumLevel.Override("Microsoft", LogEventLevel.Error)
+            .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
             .CreateLogger();
         builder.Logging.ClearProviders();
         builder.Logging.AddSerilog(logger);
