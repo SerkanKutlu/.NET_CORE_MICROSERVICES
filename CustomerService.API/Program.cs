@@ -1,6 +1,10 @@
+using CustomerService.Common;
+using CustomerService.Common.Exceptions;
 using CustomerService.Data;
 using CustomerService.Data.Settings;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+
 var builder = WebApplication.CreateBuilder(args);
 
 #region Services
@@ -11,7 +15,16 @@ builder.Services.AddControllers();
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
-    options.SuppressModelStateInvalidFilter = true;
+    options.InvalidModelStateResponseFactory = context =>
+    {
+        var messages = context.ModelState.Values
+            .Where(x => x.ValidationState == ModelValidationState.Invalid)
+            .SelectMany(x => x.Errors)
+            .Select(x => x.ErrorMessage)
+            .ToList();
+        throw new InvalidModelException(string.Join($" , ", messages));
+                        
+    };
 });
 
 #endregion
@@ -26,7 +39,7 @@ builder.Services.AddSwaggerGen();
 #region AdditionalServices
 
 builder.Services.AddDataServices(builder.Configuration);
-
+builder.Services.AddCommonExtensions(builder.Configuration);
 #endregion
 
 #endregion
@@ -36,7 +49,7 @@ builder.Services.AddDataServices(builder.Configuration);
 
 
 var app = builder.Build();
-
+app.UseExceptionMiddleware();
 
 #region Pipeline
 
