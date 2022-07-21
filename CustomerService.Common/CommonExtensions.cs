@@ -1,4 +1,5 @@
-﻿using CustomerService.Common.Middlewares;
+﻿using System.Reflection;
+using CustomerService.Common.Middlewares;
 using CustomerService.Common.Validations;
 using FluentValidation;
 using Microsoft.AspNetCore.Builder;
@@ -13,6 +14,8 @@ public static class CommonExtensions
     {
         //This will add all validators at these assembly. (default and at the documentation : scoped)
         services.AddValidatorsFromAssemblyContaining<AddressValidation>();
+        //Auto Mapper
+        services.AddAutoMapper(Assembly.GetExecutingAssembly());
         return services;
     }
 

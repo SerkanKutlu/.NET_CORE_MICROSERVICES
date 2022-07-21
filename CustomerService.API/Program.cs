@@ -2,6 +2,7 @@ using CustomerService.Common;
 using CustomerService.Common.Exceptions;
 using CustomerService.Data;
 using CustomerService.Data.Settings;
+using CustomerService.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -40,6 +41,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDataServices(builder.Configuration);
 builder.Services.AddCommonExtensions(builder.Configuration);
+builder.Services.AddRepositoryExtensions(builder.Configuration);
 #endregion
 
 #endregion
