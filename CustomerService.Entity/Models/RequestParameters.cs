@@ -1,4 +1,4 @@
-﻿namespace Customer.Entity.Models;
+﻿namespace CustomerService.Entity.Models;
 
 public class RequestParameters
 {

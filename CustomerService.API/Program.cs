@@ -1,5 +1,6 @@
+using CustomerService.Data;
+using CustomerService.Data.Settings;
 using Microsoft.AspNetCore.Mvc;
-
 var builder = WebApplication.CreateBuilder(args);
 
 #region Services
@@ -22,8 +23,11 @@ builder.Services.AddSwaggerGen();
 
 #endregion
 
+#region AdditionalServices
 
+builder.Services.AddDataServices(builder.Configuration);
 
+#endregion
 
 #endregion
 
