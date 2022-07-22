@@ -1,10 +1,11 @@
 ﻿using CustomerService.Common.Exceptions;
+using CustomerService.Common.Models;
 using CustomerService.Data.Mongo;
 using CustomerService.Entity.Models;
 using CustomerService.Repository.Extensions;
 using MongoDB.Driver;
 
-namespace CustomerService.Repository.Interfaces;
+namespace CustomerService.Repository.CustomerRepository;
 
 public class CustomerRepository : ICustomerRepository
 {
@@ -38,16 +39,20 @@ public class CustomerRepository : ICustomerRepository
     }
 
         
-    public async Task<IEnumerable<Customer>> GetAll(RequestParameters requestParameters)
+    public async Task<PagedList<Customer>> GetAll(RequestParameters requestParameters)
     {
-        var customers= await _mongoService.Customers.
-             Search(requestParameters.SearchTerm)
-            .CustomSort(requestParameters.OrderBy)
-            .Skip((requestParameters.PageNumber - 1) * requestParameters.PageSize)
-            .Limit(requestParameters.PageSize)
-            .ToListAsync();
-        if (customers.Any())
-            return customers;
+        // var customers= await _mongoService.Customers.
+        //      Search(requestParameters.SearchTerm)
+        //     .CustomSort(requestParameters.OrderBy)
+        //     .Skip((requestParameters.PageNumber - 1) * requestParameters.PageSize)
+        //     .Limit(requestParameters.PageSize)
+        //     .ToListAsync();
+        var customers = await _mongoService.Customers
+            .Search(requestParameters.SearchTerm)
+            .CustomSort(requestParameters.OrderBy).ToListAsync();
+        var returnCustomers = PagedList<Customer>.ToPagedList(customers,requestParameters.PageNumber,requestParameters.PageSize);
+        if (returnCustomers.Any())
+            return returnCustomers;
         throw new NotFoundException<Customer>();
     }
 
