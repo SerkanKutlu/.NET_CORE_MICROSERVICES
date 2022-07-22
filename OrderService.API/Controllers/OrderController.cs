@@ -166,7 +166,6 @@ public class OrderController : ControllerBase
         /// <response code="404">Invalid Customer Id or No Order With The Customer</response>
         /// <response code="400">Invalid Id Format Error</response>
         [HttpDelete("customer/{customerId}")]
-        [ServiceFilter(typeof(CustomerExistAttribute))]
         public async Task<IActionResult> DeleteOrderOfCustomer(string customerId)
         {
             await _orderRepository.DeleteOrderOfCustomer(customerId);

@@ -57,6 +57,7 @@ public class OrderRepository : IOrderRepository
     public async Task<Order> GetWithId(string orderId)
     {
         var order = await _mongoService.Orders.Find(o => o.Id == orderId).FirstOrDefaultAsync();
+        var x = new FormatException();
         if (order == null)
             throw new NotFoundException<Order>(orderId);
         return order;

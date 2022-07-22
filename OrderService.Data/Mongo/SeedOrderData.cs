@@ -3,7 +3,7 @@ using OrderService.Entity.Models;
 
 namespace OrderService.Data.Mongo;
 
-public class SeedOrderData
+public static class SeedOrderData
 {
     public static void SeedData(IMongoCollection<Order> orders)
     {
@@ -16,6 +16,7 @@ public class SeedOrderData
     }
     private static IEnumerable<Order>  GetInitialOrders()
     {
+        
         return new[]
         {
             new Order
@@ -27,13 +28,13 @@ public class SeedOrderData
                     AddressLine = "cumhuriyet",
                     City = "samsun",
                     CityCode = 55,
-                    Country = "tr"
+                    Country = "tr",
                 },
-                CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now,
+                CreatedAt = DateTime.Now,
                 Quantity = 1,
-                Status = "DELIVERED",
-                Total = 5000,
+                Status = "delivered",
+                Total = 5000f,
                 ProductIds = {"32d91541a2a411f44df899cf"}
             }
         };

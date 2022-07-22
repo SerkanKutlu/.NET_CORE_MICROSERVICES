@@ -3,7 +3,7 @@ using MongoDB.Driver;
 
 namespace CustomerService.Data.Mongo;
 
-public static class SeedCustomerData
+public static class  SeedCustomerData
 {
 
     public static void SeedData(IMongoCollection<Customer> customers)

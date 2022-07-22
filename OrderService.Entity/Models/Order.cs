@@ -13,7 +13,7 @@ public class Order
     public double Total { get; set; } //This will be set auto
     public string Status { get; set; }
     public Address Address { get; set; }
-    public List<string> ProductIds { get; set; }
+    public List<string> ProductIds { get; set; } = new();
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 }

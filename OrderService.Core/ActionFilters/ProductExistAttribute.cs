@@ -19,15 +19,15 @@ public class ProductExistAttribute:IAsyncActionFilter
 
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
-        var order = _mapper.Map<Order>(context.ActionArguments["newOrder"]);
-        if (order == null)
+        if (context.ActionArguments.ContainsKey("newOrder"))
         {
-            throw new InvalidModelException("Enter a valid Order");
+            var order = _mapper.Map<Order>(context.ActionArguments["newOrder"]);
+            foreach (var productId in order.ProductIds)
+            {
+                await _productRepository.GetWithId(productId);
+            }
+            await next();
         }
-        foreach (var productId in order.ProductIds)
-        {
-            await _productRepository.GetWithId(productId);
-        }
-        await next();
+       
     }
 }

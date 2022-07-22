@@ -26,6 +26,13 @@ public class ExceptionMiddleware
         {
             await HandleCustomExceptionAsync(httpContext, ex);
         }
+        catch (FormatException ex)
+        {
+            if (ex.Message.Contains("digit hex"))
+            {
+                await HandleCustomExceptionAsync(httpContext, new InvalidModelException("Enter id with correct format"));
+            }
+        }
         catch (Exception ex)
         {
             await HandleExceptionAsync(httpContext, ex);
@@ -37,7 +44,7 @@ public class ExceptionMiddleware
     {
         _logger.LogInformation($"Custom exception handled: {ex.ErrorDetails.Message}");
         httpContext.Response.ContentType = "application/json";
-        httpContext.Response.StatusCode = ((CustomExceptionBase) ex).ErrorDetails.StatusCode;
+        httpContext.Response.StatusCode = ex.ErrorDetails.StatusCode;
         await httpContext.Response.WriteAsync(ex.ToString());
     }
 

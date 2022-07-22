@@ -24,7 +24,7 @@ public class CustomerHelper : ICustomerHelper
 
     public async Task DeleteRelatedOrders(string customerId)
     {
-        //Client has a name because it has a retry policy.
+        
         var result =await _httpRequest.DeleteOrders(customerId);
         if (result.StatusCode!=HttpStatusCode.NotFound && result.StatusCode!= HttpStatusCode.OK )
         {

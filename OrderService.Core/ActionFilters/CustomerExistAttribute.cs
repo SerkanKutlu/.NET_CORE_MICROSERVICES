@@ -19,20 +19,22 @@ public class CustomerExistAttribute:IAsyncActionFilter
 
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
-        var customerId = context.ActionArguments["customerId"];
-        if (customerId != null)
+        if (context.ActionArguments.ContainsKey("customerId"))
         {
+            var customerId = context.ActionArguments["customerId"];
             await _orderHelper.CheckCustomer((string)customerId);
             await next();
         }
-        var order = _mapper.Map<Order>(context.ActionArguments["newOrder"]);
-        if (order !=null)
+
+        else if (context.ActionArguments.ContainsKey("newOrder"))
         {
-            customerId = order.CustomerId;
-            await _orderHelper.CheckCustomer((string)customerId);
+            var order = _mapper.Map<Order>(context.ActionArguments["newOrder"]);
+            var customerId = order.CustomerId;
+            await _orderHelper.CheckCustomer(customerId);
             await next();
         }
-        throw new InvalidModelException("Customer  is not found");
+       
+        
 
     }
 }

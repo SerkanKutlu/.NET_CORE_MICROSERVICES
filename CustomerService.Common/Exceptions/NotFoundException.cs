@@ -2,12 +2,15 @@
 
 namespace CustomerService.Common.Exceptions;
 
-public class NotFoundException<T>:CustomExceptionBase
+public class NotFoundException<T>:CustomExceptionBase where T:class
 {
-    public NotFoundException() : base(new ErrorDetails($"{nameof(T)} is not found",404))
+    public NotFoundException() : base(new ErrorDetails($"{typeof(T).Name} is not found",404))
     {
+        var x = typeof(T);
+        Console.WriteLine(x);
+        ;
     }
-    public NotFoundException(string id) : base(new ErrorDetails($"{nameof(T)} with {id} is not found",404))
+    public NotFoundException(string id) : base(new ErrorDetails($"{typeof(T).Name} with {id} is not found",404))
     {
     }
 }

@@ -2,6 +2,7 @@
 using System.Text.Json.Serialization;
 using AutoMapper;
 using CustomerService.Common.DTO;
+using CustomerService.Common.Exceptions;
 using CustomerService.Common.Models;
 using CustomerService.Core.Helpers;
 using CustomerService.Entity.Models;
@@ -26,7 +27,7 @@ public class CustomersController : ControllerBase
         _mapper = mapper;
         _customerHelper = customerHelper;
     }
-
+    
     #region Get Requests
     
     /// <summary>
