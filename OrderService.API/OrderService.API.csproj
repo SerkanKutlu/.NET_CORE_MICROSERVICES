@@ -2,7 +2,6 @@
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
-        <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
@@ -11,7 +10,16 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\OrderService.Common\OrderService.Common.csproj" />
+      <ProjectReference Include="..\OrderService.Core\OrderService.Core.csproj" />
       <ProjectReference Include="..\OrderService.Data\OrderService.Data.csproj" />
+      <ProjectReference Include="..\OrderService.Repository\OrderService.Repository.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Update="appsettings.Development.json">
+        <DependentUpon>appsettings.json</DependentUpon>
+      </Content>
     </ItemGroup>
 
 </Project>

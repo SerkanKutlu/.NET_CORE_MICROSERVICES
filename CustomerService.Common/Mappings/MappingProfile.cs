@@ -12,8 +12,6 @@ public class MappingProfile: Profile
         CreateMap<CustomerForCreationDto,Customer>().
             ForMember(dest=>dest.CreatedAt,operation=>operation
                 .MapFrom(source=>DateTime.Now.ToUniversalTime())).
-            ForMember(dest=>dest.UpdatedAt,operation=>operation
-                .MapFrom(dest=>DateTime.Now.ToUniversalTime())).
             ForMember(dest=>dest.Email, operation=>operation
                 .MapFrom(source=>source.Email.ToLower()));
         CreateMap<CustomerForUpdateDto, Customer>().ForMember(dest => dest.UpdatedAt, operation => operation

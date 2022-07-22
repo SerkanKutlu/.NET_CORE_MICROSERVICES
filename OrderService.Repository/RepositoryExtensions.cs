@@ -1,14 +1,15 @@
-﻿using CustomerService.Repository.Repository;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using OrderService.Repository.Repository;
+using OrderService.Repository.Repository.Interfaces;
 
-namespace CustomerService.Repository;
+namespace OrderService.Repository;
 
 public static class RepositoryExtensions
 {
     public static IServiceCollection AddRepositoryExtensions(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddSingleton<ICustomerRepository, CustomerRepository>();
+        services.AddSingleton<IOrderRepository, OrderRepository>();
         return services;
     }
 }

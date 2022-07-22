@@ -1,6 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using OrderService.Common;
+using OrderService.Common.Exceptions;
+using OrderService.Core;
 using OrderService.Data;
+using OrderService.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,16 +31,18 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
             .SelectMany(x => x.Errors)
             .Select(x => x.ErrorMessage)
             .ToList();
-        //throw new InvalidModelException(string.Join($" , ", messages));
-        throw new Exception();
+        throw new InvalidModelException(string.Join($" , ", messages));
     };
 });
 
 #endregion
 #region AdditionalServices
 
-builder.Services.AddDataServices(builder.Configuration);
-
+builder.Services.AddDataExtensions(builder.Configuration);
+builder.Services.AddRepositoryExtensions(builder.Configuration);
+builder.Services.AddCommonExtensions(builder.Configuration);
+builder.AddSeriLogConfiguration();
+builder.Services.AddCoreExtensions(builder.Configuration);
 #endregion
 #endregion
 
@@ -53,7 +59,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-
+app.UseExceptionMiddleware();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

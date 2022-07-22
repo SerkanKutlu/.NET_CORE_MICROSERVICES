@@ -39,11 +39,11 @@ builder.Services.AddSwaggerGen();
 #endregion
 #region AdditionalServices
 
-builder.Services.AddDataServices(builder.Configuration);
+builder.Services.AddDataExtensions(builder.Configuration);
 builder.Services.AddCommonExtensions(builder.Configuration);
 builder.Services.AddRepositoryExtensions(builder.Configuration);
 builder.AddSeriLogConfiguration();
-builder.Services.AddCoreServices(builder.Configuration);
+builder.Services.AddCoreExtensions(builder.Configuration);
 #endregion
 #endregion
 

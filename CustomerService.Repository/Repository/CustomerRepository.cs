@@ -5,7 +5,7 @@ using CustomerService.Entity.Models;
 using CustomerService.Repository.Extensions;
 using MongoDB.Driver;
 
-namespace CustomerService.Repository.CustomerRepository;
+namespace CustomerService.Repository.Repository;
 
 public class CustomerRepository : ICustomerRepository
 {

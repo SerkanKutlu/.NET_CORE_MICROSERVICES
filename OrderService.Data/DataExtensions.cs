@@ -8,7 +8,7 @@ namespace OrderService.Data;
 
 public static class DataExtensions
 {
-    public static IServiceCollection AddDataServices(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddDataExtensions(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<MongoSettings>(configuration.GetSection(nameof(MongoSettings)));
         services.AddSingleton<IMongoSettings>(provider=>provider.GetRequiredService<IOptions<MongoSettings>>().Value);

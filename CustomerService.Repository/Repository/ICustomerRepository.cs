@@ -1,7 +1,7 @@
 ﻿using CustomerService.Common.Models;
 using CustomerService.Entity.Models;
 
-namespace CustomerService.Repository.CustomerRepository;
+namespace CustomerService.Repository.Repository;
 
 public interface ICustomerRepository
 {

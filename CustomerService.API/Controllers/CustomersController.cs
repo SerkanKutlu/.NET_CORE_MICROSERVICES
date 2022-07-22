@@ -5,7 +5,7 @@ using CustomerService.Common.DTO;
 using CustomerService.Common.Models;
 using CustomerService.Core.Helpers;
 using CustomerService.Entity.Models;
-using CustomerService.Repository.CustomerRepository;
+using CustomerService.Repository.Repository;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson.IO;
 

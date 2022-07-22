@@ -1,11 +1,10 @@
 ﻿using System.Net;
-using CustomerService.Common.Exceptions;
-using CustomerService.Common.Models;
 using Microsoft.AspNetCore.Http;
+using OrderService.Common.Exceptions;
+using OrderService.Common.Models;
 using Microsoft.Extensions.Logging;
-using MongoDB.Driver;
 
-namespace CustomerService.Common.Middlewares;
+namespace OrderService.Common.Middlewares;
 
 public class ExceptionMiddleware
 {
@@ -26,18 +25,6 @@ public class ExceptionMiddleware
         catch (CustomExceptionBase ex)
         {
             await HandleCustomExceptionAsync(httpContext, ex);
-        }
-        catch (MongoWriteException ex)
-        {
-            if (ex.WriteError.Category == ServerErrorCategory.DuplicateKey)
-            {
-                await HandleCustomExceptionAsync(httpContext, new DuplicatedEmailException());
-            }
-            else
-            {
-                await HandleExceptionAsync(httpContext, ex);
-            }
-            
         }
         catch (Exception ex)
         {

@@ -1,12 +1,14 @@
-﻿using CustomerService.Common.Exceptions;
-using CustomerService.Core.Helpers;
-using CustomerService.Core.HttpClient;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using OrderService.Common.Exceptions;
+using OrderService.Core.ActionFilters;
+using OrderService.Core.HttpClient;
+using OrderService.Core.HttpClient.Interfaces;
 using Polly;
 
-namespace CustomerService.Core;
+
+namespace OrderService.Core;
 
 public static class CoreExtensions
 {
@@ -15,7 +17,7 @@ public static class CoreExtensions
         services.Configure<HttpClientProperty>(configuration.GetSection(nameof(HttpClientProperty)));
         services.AddSingleton<IHttpClientProperty>(provider=>provider.GetRequiredService<IOptions<HttpClientProperty>>().Value);
         services.AddSingleton<IHttpRequest, HttpRequest>();
-        services.AddSingleton<ICustomerHelper, CustomerHelper>();
+        //services.AddSingleton<ICustomerHelper, CustomerHelper>();
         
         services.AddHttpClient("httpClient")
             .AddPolicyHandler(Policy.TimeoutAsync(20, (context, timeSpan, task) =>
@@ -27,6 +29,10 @@ public static class CoreExtensions
             {
                 
             }));
+        
+        //ActionFilters
+        services.AddSingleton<ProductExistAttribute>();
+        services.AddSingleton<CustomerExistAttribute>();
         
         return services;
     }
