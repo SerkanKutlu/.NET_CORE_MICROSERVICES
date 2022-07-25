@@ -1,25 +1,22 @@
 using System.Text;
-using CustomerService.Common;
-using CustomerService.Common.Exceptions;
-using CustomerService.Core;
-using CustomerService.Data;
-using CustomerService.Repository;
+using CustomerService.Application;
+using CustomerService.Application.Exceptions;
+using CustomerService.Infrastructure;
+using CustomerServiceClean.API.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.IdentityModel.Tokens;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
-#region Services
+// Add services to the container.
 
 builder.Services.AddControllers();
-#region Swagger
 
+#region Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
 
 #endregion
 #region SuppressDefaultValidation
@@ -42,11 +39,10 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 #endregion
 #region AdditionalServices
 
-builder.Services.AddDataExtensions(builder.Configuration);
-builder.Services.AddCommonExtensions(builder.Configuration);
-builder.Services.AddRepositoryExtensions(builder.Configuration);
+builder.Services.AddApplicationServices(builder.Configuration);
+builder.Services.AddInfrastructureExtensions(builder.Configuration);
 builder.AddSeriLogConfiguration();
-builder.Services.AddCoreExtensions(builder.Configuration);
+
 #endregion
 #region Authentication
 
@@ -68,33 +64,19 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 
 
 #endregion
-#endregion
-
-
-
-
-
 var app = builder.Build();
 
-
-#region Pipeline
-
+// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-app.UseExceptionMiddleware();
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseHttpsRedirection();
 
-app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
 
 app.Run();
-
-#endregion
-
-

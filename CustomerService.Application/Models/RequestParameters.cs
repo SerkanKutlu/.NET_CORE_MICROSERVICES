@@ -1,8 +1,7 @@
 ﻿
-using CustomerService.Common.Exceptions;
+using CustomerService.Application.Exceptions;
 
-
-namespace CustomerService.Common.Models;
+namespace CustomerService.Application.Models;
 
 
 public class RequestParameters
