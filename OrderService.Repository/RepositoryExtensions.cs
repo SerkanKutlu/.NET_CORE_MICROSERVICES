@@ -9,7 +9,7 @@ public static class RepositoryExtensions
 {
     public static IServiceCollection AddRepositoryExtensions(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddSingleton<IOrderRepository, OrderRepository>();
+        services.AddTransient<IOrderRepository, OrderRepository>();
         services.AddSingleton<IProductRepository, ProductRepository>();
         return services;
     }

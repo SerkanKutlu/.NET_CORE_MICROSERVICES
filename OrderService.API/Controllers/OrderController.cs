@@ -95,8 +95,10 @@ public class OrderController : ControllerBase
         public async Task<IActionResult> CreateOrder([FromBody] OrderForCreationDto newOrder)
         {
             var order = _mapper.Map<Order>(newOrder);
+            
             await _orderHelper.SetTotalAmount(order);
             await _orderHelper.SetAddressOfOrder(order);
+            
             await _orderRepository.CreateAsync(order);
             HttpContext.Response.Headers.Add("location",$"https://{Request.Headers["Host"]}/api/Orders/{order.Id}");
             _logger.LogInformation($"New order added with id {order.Id}");

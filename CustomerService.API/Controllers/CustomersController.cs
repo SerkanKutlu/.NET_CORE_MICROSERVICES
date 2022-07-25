@@ -1,19 +1,18 @@
 ﻿using System.Text.Json;
-using System.Text.Json.Serialization;
 using AutoMapper;
 using CustomerService.Common.DTO;
-using CustomerService.Common.Exceptions;
 using CustomerService.Common.Models;
 using CustomerService.Core.Helpers;
 using CustomerService.Entity.Models;
 using CustomerService.Repository.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Bson.IO;
 
 namespace CustomerService.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class CustomersController : ControllerBase
 {
     private readonly ILogger<CustomersController> _logger;

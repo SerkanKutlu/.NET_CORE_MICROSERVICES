@@ -1,11 +1,14 @@
+using System.Text;
 using CustomerService.Common;
 using CustomerService.Common.Exceptions;
 using CustomerService.Core;
 using CustomerService.Data;
 using CustomerService.Repository;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
- 
+using Microsoft.IdentityModel.Tokens;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,8 +28,9 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
             .Select(x => x.ErrorMessage)
             .ToList();
         throw new InvalidModelException(string.Join($" , ", messages));
-                        
     };
+    
+    
 });
 
 #endregion
@@ -44,6 +48,27 @@ builder.Services.AddCommonExtensions(builder.Configuration);
 builder.Services.AddRepositoryExtensions(builder.Configuration);
 builder.AddSeriLogConfiguration();
 builder.Services.AddCoreExtensions(builder.Configuration);
+#endregion
+
+#region Authentication
+
+
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateAudience = true,
+        ValidateIssuer = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = false,
+        ValidIssuer = builder.Configuration["Token:Issuer"],
+        ValidAudience = builder.Configuration["Token:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Token:SecurityKey"]))
+    };
+});
+
+
 #endregion
 #endregion
 
@@ -65,6 +90,7 @@ if (app.Environment.IsDevelopment())
 app.UseExceptionMiddleware();
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
