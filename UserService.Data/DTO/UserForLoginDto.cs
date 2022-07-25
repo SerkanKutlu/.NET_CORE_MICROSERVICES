@@ -1,4 +1,4 @@
-﻿namespace UserService.API.DTO;
+﻿namespace UserService.Data.DTO;
 
 public class UserForLoginDto
 {

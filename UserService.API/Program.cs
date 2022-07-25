@@ -1,4 +1,5 @@
 using UserService.API;
+using UserService.Data;
 using TokenHandler = UserService.API.TokenHandler;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,23 +7,13 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-builder.Services.AddSingleton<ITokenHandler>(provider=>ActivatorUtilities.CreateInstance<TokenHandler>(provider,builder.Configuration));
-
+builder.Services.AddSingleton<ITokenHandler, TokenHandler>(sp=>new TokenHandler(builder.Configuration));
+builder.Services.AddDataExtensions(builder.Configuration);
 #region Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 #endregion
-
-
-
-
-
-
-
-
-
-
 
 
 var app = builder.Build();
