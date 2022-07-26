@@ -14,16 +14,18 @@ public static class ApplicationExtensions
 {
     public static IServiceCollection AddInfrastructureExtensions(this IServiceCollection services, IConfiguration configuration)
     {
-       
         services.Configure<HttpClientProperty>(configuration.GetSection(nameof(HttpClientProperty)));
-        services.AddSingleton<IHttpClientProperty>(provider=>provider.GetRequiredService<IOptions<HttpClientProperty>>().Value);
         
-        services.AddSingleton<IHttpRequest, HttpRequest>();
+        //These are fine with scoped.
+        services.AddScoped<IHttpClientProperty>(provider=>provider.GetRequiredService<IOptionsSnapshot<HttpClientProperty>>().Value);
+        services.AddScoped<IHttpRequest, HttpRequest>();
         
         services.Configure<MongoSettings>(configuration.GetSection(nameof(MongoSettings)));
+        //Has to be singleton
         services.AddSingleton<IMongoSettings>(provider=>provider.GetRequiredService<IOptions<MongoSettings>>().Value);
-        services.AddSingleton<IMongoService, MongoService>();
         
+        //Definitely correct
+        services.AddSingleton<IMongoService, MongoService>();
         services.AddScoped<ICustomerRepository, CustomerRepository>();
         
         services.AddHttpClient("httpClient")

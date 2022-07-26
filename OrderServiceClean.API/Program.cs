@@ -1,5 +1,9 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using OrderService.Application;
 using OrderService.Application.Exceptions;
 using OrderService.Infrastructure;
@@ -38,7 +42,24 @@ builder.Services.AddApplicationExtensions(builder.Configuration);
 builder.Services.AddInfrastructureExtensions(builder.Configuration);
 builder.AddSeriLogConfiguration();
 #endregion
+#region Authentication
 
+
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateAudience = false,
+        ValidateIssuer = true,
+        ValidateLifetime = true,
+        ValidIssuer = builder.Configuration["Token:Issuer"],
+        ValidAudience = builder.Configuration["Token:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Token:SecurityKey"]))
+    };
+});
+
+#endregion
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -50,6 +71,7 @@ if (app.Environment.IsDevelopment())
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

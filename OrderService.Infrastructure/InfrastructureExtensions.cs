@@ -15,13 +15,17 @@ public static class InfrastructureExtensions
     public static IServiceCollection AddInfrastructureExtensions(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<MongoSettings>(configuration.GetSection(nameof(MongoSettings)));
+        //has to be
         services.AddSingleton<IMongoSettings>(provider=>provider.GetRequiredService<IOptions<MongoSettings>>().Value);
+        //definitely correct
         services.AddSingleton<IMongoService, MongoService>();
         
+        //Scoped
         services.Configure<HttpClientProperty>(configuration.GetSection(nameof(HttpClientProperty)));
-        services.AddSingleton<IHttpClientProperty>(provider=>provider.GetRequiredService<IOptions<HttpClientProperty>>().Value);
-        services.AddSingleton<IHttpRequest, HttpRequest>();
+        services.AddScoped<IHttpClientProperty>(provider=>provider.GetRequiredService<IOptionsSnapshot<HttpClientProperty>>().Value);
+        services.AddScoped<IHttpRequest, HttpRequest>();
         
+        //definitely correct
         services.AddScoped<IOrderRepository, OrderRepository>();
         services.AddScoped<IProductRepository, ProductRepository>();
         

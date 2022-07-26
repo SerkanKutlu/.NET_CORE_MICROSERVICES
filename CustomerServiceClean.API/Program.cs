@@ -9,7 +9,9 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Configuration.SetBasePath(builder.Environment.ContentRootPath)
+    .AddJsonFile("appsettings.json", true, true)
+    .AddEnvironmentVariables();
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -48,18 +50,16 @@ builder.AddSeriLogConfiguration();
 
 
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(JwtBearerDefaults.AuthenticationScheme,options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateAudience = false,
         ValidateIssuer = true,
         ValidateLifetime = true,
-        ValidateIssuerSigningKey = false,
         ValidIssuer = builder.Configuration["Token:Issuer"],
         ValidAudience = builder.Configuration["Token:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Token:SecurityKey"])),
-        RoleClaimType = "role"
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Token:SecurityKey"]))
     };
 });
 
@@ -75,6 +75,7 @@ if (app.Environment.IsDevelopment())
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

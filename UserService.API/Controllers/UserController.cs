@@ -1,12 +1,9 @@
-﻿using System.Text;
-using AutoMapper;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Driver;
-using UserService.Data.DTO;
-using UserService.Data.Entity;
-using UserService.Data.Mongo;
-using UserService.Data.Repository;
-
+using UserService.Core.DTO;
+using UserService.Core.Entity;
+using UserService.Core.Interfaces;
 namespace UserService.API.Controllers;
 
 [ApiController]
@@ -28,8 +25,8 @@ public class UserController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] UserForLoginDto userLogin)
     {
-        await _userRepository.LoginAsync(userLogin.Email, userLogin.Password);
-        var token = _tokenHandler.CreateToken();
+        var user = await _userRepository.LoginAsync(userLogin.Email, userLogin.Password);
+        var token = _tokenHandler.CreateToken(user);
         return Ok(token);
     }
 
@@ -37,7 +34,25 @@ public class UserController : ControllerBase
     public async Task<IActionResult> Register([FromBody] UserForRegisterDto userRegister)
     {
         var user = _mapper.Map<User>(userRegister);
-        _userRepository.RegisterAsync(user);
+        await _userRepository.RegisterAsync(user);
         return Ok();
+    }
+
+    [HttpGet]
+    [Authorize(Roles="Admin")]
+    public async Task<IActionResult> ListUsers()
+    {
+        var users = await _userRepository.GetAllUsers();
+        return Ok(users);
+    }
+
+    [HttpPut]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> ChangeUserRole([FromBody] RoleChangeDto roleChangeDto)
+    {
+        await _userRepository.UpdateUserRole(roleChangeDto.Id, roleChangeDto.Role);
+        return Ok();
+
+
     }
 }

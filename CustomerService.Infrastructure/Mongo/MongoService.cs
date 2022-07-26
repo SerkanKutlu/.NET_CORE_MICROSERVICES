@@ -1,5 +1,6 @@
 ﻿using CustomerService.Application.Interfaces;
 using CustomerService.Domain.Entities;
+using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
 namespace CustomerService.Infrastructure.Mongo;

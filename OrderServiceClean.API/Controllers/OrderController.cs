@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OrderService.Application.ActionFilters;
 using OrderService.Application.DTO;
@@ -11,6 +12,7 @@ namespace OrderServiceClean.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]/")]
+//[Authorize]
 public class OrderController : ControllerBase
 {
         private readonly IMapper _mapper;

@@ -25,6 +25,7 @@ public static class ApplicationExtensions
         services.AddValidatorsFromAssemblyContaining<AddressValidation>();
         //Auto Mapper
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
+        //has to be scoped
         services.AddScoped<ICustomerHelper, CustomerHelper>();
         return services;
     }
