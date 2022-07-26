@@ -1,12 +1,9 @@
-using System.Text;
-using CustomerService.Application;
-using CustomerService.Application.Exceptions;
-using CustomerService.Infrastructure;
-using CustomerServiceClean.API.Middlewares;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.IdentityModel.Tokens;
+using OrderService.Application;
+using OrderService.Application.Exceptions;
+using OrderService.Infrastructure;
+using OrderServiceClean.API.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,9 +12,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 #region Swagger
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
 #endregion
 #region SuppressDefaultValidation
 
@@ -32,38 +29,16 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
             .ToList();
         throw new InvalidModelException(string.Join($" , ", messages));
     };
-    
-    
 });
 
 #endregion
 #region AdditionalServices
 
-builder.Services.AddApplicationServices(builder.Configuration);
+builder.Services.AddApplicationExtensions(builder.Configuration);
 builder.Services.AddInfrastructureExtensions(builder.Configuration);
 builder.AddSeriLogConfiguration();
-
 #endregion
-#region Authentication
 
-
-
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateAudience = false,
-        ValidateIssuer = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = false,
-        ValidIssuer = builder.Configuration["Token:Issuer"],
-        ValidAudience = builder.Configuration["Token:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Token:SecurityKey"])),
-        RoleClaimType = "role"
-    };
-});
-
-#endregion
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

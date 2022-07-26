@@ -1,4 +1,6 @@
-﻿namespace CustomerService.Core.HttpClient;
+﻿using CustomerService.Core.HttpClient.Interfaces;
+
+namespace CustomerService.Core.HttpClient;
 
 public class HttpRequest : IHttpRequest
 {

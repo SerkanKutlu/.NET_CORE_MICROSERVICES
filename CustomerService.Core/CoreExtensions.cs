@@ -1,6 +1,7 @@
 ﻿using CustomerService.Common.Exceptions;
 using CustomerService.Core.Helpers;
 using CustomerService.Core.HttpClient;
+using CustomerService.Core.HttpClient.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;

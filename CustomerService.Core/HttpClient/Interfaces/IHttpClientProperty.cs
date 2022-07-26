@@ -1,4 +1,4 @@
-﻿namespace CustomerService.Core;
+﻿namespace CustomerService.Core.HttpClient.Interfaces;
 
 public interface IHttpClientProperty
 {

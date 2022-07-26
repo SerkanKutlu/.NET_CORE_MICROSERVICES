@@ -11,7 +11,6 @@ namespace CustomerServiceClean.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
 public class CustomersController : ControllerBase
 {
     private readonly ILogger<CustomersController> _logger;
@@ -35,6 +34,7 @@ public class CustomersController : ControllerBase
     /// <response code="200">Successful Response</response>
     /// <response code="500">Server Error</response>
     [HttpGet]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> GetAll([FromQuery] RequestParameters requestParameters)
     {
         var customers =await _customerRepository.GetAll(requestParameters);
@@ -52,6 +52,7 @@ public class CustomersController : ControllerBase
     /// <response code="400">Invalid Id Format Error</response>
     /// <response code="500">Server Error</response>
     [HttpGet("{id}")]
+    [Authorize(Roles = "User")]
     public async Task<IActionResult> GetById(string id)
     {
         var customer = await _customerRepository.GetWithId(id);

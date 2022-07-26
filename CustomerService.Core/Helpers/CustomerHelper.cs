@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using CustomerService.Common.Exceptions;
 using CustomerService.Core.Handlers;
+using CustomerService.Core.HttpClient.Interfaces;
 using CustomerService.Entity.Models;
 using CustomerService.Repository.Repository;
 
