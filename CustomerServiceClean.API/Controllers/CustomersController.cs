@@ -1,12 +1,6 @@
-﻿using System.Security.Claims;
-using System.Text.Json;
-using AutoMapper;
-using CustomerService.Application.Dto;
+﻿using CustomerService.Application.Dto;
 using CustomerService.Application.Interfaces;
 using CustomerService.Application.Models;
-using CustomerService.Domain.Entities;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,16 +11,10 @@ namespace CustomerServiceClean.API.Controllers;
 
 public class CustomersController : ControllerBase
 {
-    private readonly ILogger<CustomersController> _logger;
-    private readonly IMapper _mapper;
-    private readonly ICustomerRepository _customerRepository;
-    private readonly ICustomerHelper _customerHelper;
-    public CustomersController(ILogger<CustomersController> logger, ICustomerRepository customerRepository, IMapper mapper, ICustomerHelper customerHelper)
+    private readonly ICustomerRequestService _customerService;
+    public CustomersController(ICustomerRequestService customerService)
     {
-        _logger = logger;
-        _customerRepository = customerRepository;
-        _mapper = mapper;
-        _customerHelper = customerHelper;
+        _customerService = customerService;
     }
     
     #region Get Requests
@@ -41,9 +29,7 @@ public class CustomersController : ControllerBase
     [Authorize]
     public async Task<IActionResult> GetAll([FromQuery] RequestParameters requestParameters)
     {
-        var customers =await _customerRepository.GetAll(requestParameters);
-        Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(customers.MetaData));
-        _logger.LogInformation("Getting all customers data's from database");
+        var customers = await _customerService.GetAllCustomers(requestParameters,HttpContext);
         return Ok(customers);
     }
     
@@ -59,8 +45,7 @@ public class CustomersController : ControllerBase
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> GetById(string id)
     {
-        var customer = await _customerRepository.GetWithId(id);
-        _logger.LogInformation($"Getting customer data with {id} from database");
+        var customer =await _customerService.GetById(id);
         return Ok(customer);
     }
     
@@ -79,13 +64,11 @@ public class CustomersController : ControllerBase
     [HttpGet("validate/{id}")]
     public async Task<IActionResult> ValidateCustomer(string id)
     {
-        await _customerRepository.Validate(id);
-        _logger.LogInformation($"Validated customer with {id} from database");
+        await _customerService.ValidateCustomer(id);
         return Ok();
     }
     #endregion
     #region Post Requests
-
     /// <summary>
     /// Creating new customer by using body.
     /// </summary>
@@ -96,11 +79,8 @@ public class CustomersController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateCustomer([FromBody] CustomerForCreationDto customerForCreation)
     {
-        var customer = _mapper.Map<Customer>(customerForCreation);
-        await _customerRepository.CreateAsync(customer);
-        HttpContext.Response.Headers.Add("location",$"https://{Request.Headers["Host"]}/api/Customers/{customer.Id}");
-        _logger.LogInformation($"New customer added with id {customer.Id}");
-        return Ok(customer.Id);
+        var customerId = await _customerService.CreateCustomer(customerForCreation,HttpContext);
+        return Ok(customerId);
     }
     #endregion
     #region Put Requests
@@ -115,14 +95,10 @@ public class CustomersController : ControllerBase
     [HttpPut]
     public async Task<IActionResult> UpdateCustomer([FromBody] CustomerForUpdateDto customerForUpdate)
     {
-        var customer = _mapper.Map<Customer>(customerForUpdate);
-        await _customerHelper.SetCreatedAt(customer);
-        await _customerRepository.UpdateAsync(customer);
-        _logger.LogInformation($"Customer with id {customer.Id} updated.");
+        var customer = await _customerService.UpdateCustomer(customerForUpdate);
         return Ok(customer);
     }
     #endregion
-    
     #region Delete Requests
     /// <summary>
     /// Deleting a customer by using id of the customer.
@@ -136,8 +112,7 @@ public class CustomersController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteCustomer(string id)
     {
-        await _customerHelper.StartDeleteChain(id);
-        _logger.LogInformation($"Customer with id {id} deleted.");
+        await _customerService.DeleteCustomer(id);
         return Ok();
     }
     #endregion

@@ -101,7 +101,7 @@ public class OrderController : ControllerBase
             await _orderHelper.SetAddressOfOrder(order);
             
             await _orderRepository.CreateAsync(order);
-            HttpContext.Response.Headers.Add("location",$"https://{Request.Headers["Host"]}/api/Orders/{order.Id}");
+            HttpContext.Response.Headers.Add("location",$"https://{HttpContext.Request.Headers["Host"]}/api/Orders/{order.Id}");
             _logger.LogInformation($"New order added with id {order.Id}");
             return Ok(order.Id);
         }

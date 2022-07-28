@@ -15,7 +15,7 @@ public static class RepositoryExtensions
         services.AddSingleton<IMongoSettings>(provider=>provider.GetRequiredService<IOptions<MongoSettings>>().Value);
         services.AddSingleton<IMongoService, MongoService>();
         services.AddScoped<IUserRepository, UserRepository>();
-        services.AddSingleton<ITokenHandler, TokenHandler>(sp=>new TokenHandler(configuration));
+        services.AddTransient<ITokenHandler, TokenHandler>(sp=>new TokenHandler(configuration));
         return services;
     }
 }

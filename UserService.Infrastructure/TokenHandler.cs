@@ -17,8 +17,6 @@ public class TokenHandler : ITokenHandler
     {
         _configuration = configuration;
     }
-
-
     public Token CreateToken(User user)
     {
         var token = new Token();

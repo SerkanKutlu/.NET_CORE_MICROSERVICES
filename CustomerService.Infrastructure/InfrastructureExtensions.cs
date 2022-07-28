@@ -2,7 +2,10 @@
 using CustomerService.Application.Interfaces;
 using CustomerService.Infrastructure.HttpClient;
 using CustomerService.Infrastructure.Mongo;
+using CustomerService.Infrastructure.Publishers;
 using CustomerService.Infrastructure.Repository;
+using CustomerService.Infrastructure.Services;
+using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -36,8 +39,23 @@ public static class ApplicationExtensions
             }).AsAsyncPolicy<HttpResponseMessage>())
             .AddTransientHttpErrorPolicy(policy => policy.RetryAsync(3, (d, r) =>
             {
-                
             }));
+
+        services.AddScoped<ICustomerRequestService, CustomerRequestService>();
+        services.AddScoped<IPublisher, LogPublisher>();
+        
+        //Mass Transit
+        services.AddMassTransit(x =>
+        {
+            x.AddBus(provider => Bus.Factory.CreateUsingRabbitMq(config =>
+            {
+                config.Host(new Uri("rabbitmq://localhost"), h =>
+                {
+                    h.Username("guest");
+                    h.Password("guest");
+                });
+            }));
+        });
         return services;
     }
 }
