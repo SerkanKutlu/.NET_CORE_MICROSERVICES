@@ -1,11 +1,14 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using MassTransit;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using OrderService.Application.Consumers;
 using OrderService.Application.Exceptions;
 using OrderService.Application.Interfaces;
 using OrderService.Infrastructure.HttpClient;
 using OrderService.Infrastructure.Mongo;
 using OrderService.Infrastructure.Repository;
+using OrderService.Infrastructure.Services;
 using Polly;
 
 namespace OrderService.Infrastructure;
@@ -29,6 +32,9 @@ public static class InfrastructureExtensions
         services.AddScoped<IOrderRepository, OrderRepository>();
         services.AddScoped<IProductRepository, ProductRepository>();
         
+        //Unknown
+        services.AddScoped<IPublisher, Publisher>();
+        services.AddScoped<IOrderRequestService, OrderRequestService>();
         services.AddHttpClient("httpClient")
             .AddPolicyHandler(Policy.TimeoutAsync(20, (context, timeSpan, task) =>
             {
@@ -39,6 +45,20 @@ public static class InfrastructureExtensions
             {
                 
             }));
+        //Mass Transit
+        services.AddMassTransit(x =>
+        {
+            x.AddConsumer<DeleteOrdersConsumer>().Endpoint(c => c.Name = "customer.delete");
+            x.UsingRabbitMq((context, cfg) =>
+            {
+                cfg.Host("localhost", "/", h =>
+                {
+                    h.Username("guest");
+                    h.Password("guest");
+                });
+                cfg.ConfigureEndpoints(context);
+            });
+        });
         return services;
     }
 

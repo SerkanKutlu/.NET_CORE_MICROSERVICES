@@ -42,7 +42,7 @@ public class CustomersController : ControllerBase
     /// <response code="400">Invalid Id Format Error</response>
     /// <response code="500">Server Error</response>
     [HttpGet("{id}")]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public async Task<IActionResult> GetById(string id)
     {
         var customer =await _customerService.GetById(id);

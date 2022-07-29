@@ -1,12 +1,8 @@
-﻿using System.Text.Json;
-using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using OrderService.Application.ActionFilters;
 using OrderService.Application.DTO;
 using OrderService.Application.Interfaces;
 using OrderService.Application.Models;
-using OrderService.Domain.Entities;
 
 namespace OrderServiceClean.API.Controllers;
 
@@ -15,20 +11,15 @@ namespace OrderServiceClean.API.Controllers;
 //[Authorize]
 public class OrderController : ControllerBase
 {
-        private readonly IMapper _mapper;
-        private readonly ILogger<OrderController> _logger;
-        private readonly IOrderRepository _orderRepository;
-        private readonly IOrderHelper _orderHelper;
-        public OrderController(IOrderRepository orderRepository, ILogger<OrderController> logger, IMapper mapper, IOrderHelper orderHelper)
-        {
-            _orderRepository = orderRepository;
-            _logger = logger;
-            _mapper = mapper;
-            _orderHelper = orderHelper;
-        }
+    private readonly IOrderRequestService _orderRequestService;
+
+    public OrderController(IOrderRequestService orderRequestService)
+    {
+        _orderRequestService = orderRequestService;
+    }
 
 
-        #region Get Requests
+    #region Get Requests
 
         /// <summary>
         /// List all order
@@ -39,9 +30,7 @@ public class OrderController : ControllerBase
         //[ResponseCache(Duration = 120)]
         public async Task<IActionResult> GetAll([FromQuery] RequestParameters requestParameters)
         {
-            var orders = await _orderRepository.GetAll(requestParameters);
-            Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(orders.MetaData));
-            _logger.LogInformation("Getting all orders data's from database");
+            var orders = await _orderRequestService.GetAll(requestParameters,HttpContext);
             return Ok(orders);
         }
         
@@ -56,8 +45,7 @@ public class OrderController : ControllerBase
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(string id)
         {
-            var order = await _orderRepository.GetWithId(id);
-            _logger.LogInformation($"Getting order data with {id} from database");
+            var order = await _orderRequestService.GetById(id);
             return Ok(order);
         }
 
@@ -74,9 +62,7 @@ public class OrderController : ControllerBase
         [ServiceFilter(typeof(CustomerExistAttribute))]
         public async Task<IActionResult> GetOrdersOfCustomers(string customerId,[FromQuery] RequestParameters requestParameters)
         {
-            var orders =await _orderRepository.GetOrdersOfCustomer(customerId,requestParameters);
-            Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(orders.MetaData));
-            _logger.LogInformation($"Orders of customer with id {customerId} fetched");
+            var orders =await _orderRequestService.GetOrdersOfCustomers(customerId, requestParameters, HttpContext);
             return Ok(orders);
         }
         #endregion
@@ -95,15 +81,8 @@ public class OrderController : ControllerBase
         [ServiceFilter(typeof(ProductExistAttribute))]
         public async Task<IActionResult> CreateOrder([FromBody] OrderForCreationDto newOrder)
         {
-            var order = _mapper.Map<Order>(newOrder);
-            
-            await _orderHelper.SetTotalAmount(order);
-            await _orderHelper.SetAddressOfOrder(order);
-            
-            await _orderRepository.CreateAsync(order);
-            HttpContext.Response.Headers.Add("location",$"https://{HttpContext.Request.Headers["Host"]}/api/Orders/{order.Id}");
-            _logger.LogInformation($"New order added with id {order.Id}");
-            return Ok(order.Id);
+            var orderId =await _orderRequestService.CreateOrder(newOrder,HttpContext);
+            return Ok(orderId);
         }
         #endregion
         #region Put Requests
@@ -119,13 +98,8 @@ public class OrderController : ControllerBase
         [ServiceFilter(typeof(ProductExistAttribute))]
         public async Task<IActionResult> UpdateOrder([FromBody] OrderForUpdateDto newOrder)
         {
-            var order = _mapper.Map<Order>(newOrder);
-            await _orderHelper.SetPersistentDataForUpdate(order);
-            await _orderHelper.SetTotalAmount(order);
-            await _orderRepository.UpdateAsync(order);
-            _logger.LogInformation($"Order with id {order.Id} updated.");
+            var order =await _orderRequestService.UpdateOrder(newOrder);
             return Ok(order);
-            
         }
 
         /// <summary>
@@ -140,7 +114,7 @@ public class OrderController : ControllerBase
         [HttpPut("status/{id}/{newStatus}")]
         public async Task<IActionResult> UpdateStatus(string id, string newStatus)
         {
-            await _orderRepository.ChangeStatus(id, newStatus);
+            await _orderRequestService.UpdateStatus(id, newStatus);
             return Ok();
         }
         #endregion
@@ -155,9 +129,8 @@ public class OrderController : ControllerBase
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteOrder(string id)
         {
-            await _orderRepository.DeleteAsync(id);
-            _logger.LogInformation($"Order with id {id} deleted.");
-            return Ok();//May be returned NoContent() 204
+            await _orderRequestService.DeleteOrder(id);
+            return Ok();
         }
 
         /// <summary>
@@ -171,8 +144,7 @@ public class OrderController : ControllerBase
         [HttpDelete("customer/{customerId}")]
         public async Task<IActionResult> DeleteOrderOfCustomer(string customerId)
         {
-            await _orderRepository.DeleteOrderOfCustomer(customerId);
-            _logger.LogInformation($"Orders of customer with customer id {customerId} deleted.");
+            await _orderRequestService.DeleteOrderOfCustomer(customerId);
             return Ok();
         }
         #endregion

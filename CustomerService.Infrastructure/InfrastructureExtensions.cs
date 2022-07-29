@@ -2,7 +2,6 @@
 using CustomerService.Application.Interfaces;
 using CustomerService.Infrastructure.HttpClient;
 using CustomerService.Infrastructure.Mongo;
-using CustomerService.Infrastructure.Publishers;
 using CustomerService.Infrastructure.Repository;
 using CustomerService.Infrastructure.Services;
 using MassTransit;
@@ -42,20 +41,32 @@ public static class ApplicationExtensions
             }));
 
         services.AddScoped<ICustomerRequestService, CustomerRequestService>();
-        services.AddScoped<IPublisher, LogPublisher>();
+        services.AddScoped<IPublisher, Publisher>();
         
         //Mass Transit
         services.AddMassTransit(x =>
         {
-            x.AddBus(provider => Bus.Factory.CreateUsingRabbitMq(config =>
+
+            x.UsingRabbitMq((context,cfg) =>
             {
-                config.Host(new Uri("rabbitmq://localhost"), h =>
-                {
+                cfg.Host("localhost", "/", h => {
                     h.Username("guest");
                     h.Password("guest");
                 });
-            }));
+            });
         });
+        
+        // services.AddMassTransit(x =>
+        // {
+        //     x.AddBus(provider => Bus.Factory.CreateUsingRabbitMq(config =>
+        //     {
+        //         config.Host(new Uri("rabbitmq://localhost"), h =>
+        //         {
+        //             h.Username("guest");
+        //             h.Password("guest");
+        //         });
+        //     }));
+        // });
         return services;
     }
 }

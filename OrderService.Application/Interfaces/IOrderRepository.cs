@@ -12,6 +12,6 @@ public interface IOrderRepository
     Task<Order> GetWithId(string orderId);
     Task ChangeStatus(string orderId, string newStatus);
     Task<PagedList<Order>> GetOrdersOfCustomer(string customerId,RequestParameters requestParameters);
-    Task DeleteOrderOfCustomer(string customerId);
+    Task<bool> DeleteOrderOfCustomer(string customerId);
     Task UpdateProductRelatedOrders(string productId);
 }

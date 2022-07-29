@@ -4,6 +4,7 @@ namespace CustomerService.Application.Interfaces;
 
 public interface IPublisher
 {
-    Task PublishAtCreation(Customer customer);
-    Task PublishAtUpdate(Customer customer);
+    Task PublishCustomerCreatedEvent(Customer customer);
+    Task PublishCustomerUpdatedEvent(Customer customer);
+    Task SendDeleteCustomerRelatedOrdersCommand(string customerId);
 }

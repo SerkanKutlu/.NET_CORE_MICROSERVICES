@@ -88,12 +88,10 @@ public class OrderRepository : IOrderRepository
         return pagedOrders;
     }
 
-    public async Task DeleteOrderOfCustomer(string customerId)
+    public async Task<bool> DeleteOrderOfCustomer(string customerId)
     {
         var result = await _mongoService.Orders.DeleteManyAsync(o => o.CustomerId == customerId);
-        if (result.DeletedCount == 0)
-            throw new NotFoundException<Order>();
-
+        return result.DeletedCount > 0;
     }
 
     public async Task UpdateProductRelatedOrders(string productId)
