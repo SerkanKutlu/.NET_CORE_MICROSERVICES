@@ -26,7 +26,7 @@ public class CustomersController : ControllerBase
     /// <response code="200">Successful Response</response>
     /// <response code="500">Server Error</response>
     [HttpGet]
-    [Authorize]
+    //[Authorize]
     public async Task<IActionResult> GetAll([FromQuery] RequestParameters requestParameters)
     {
         var customers = await _customerService.GetAllCustomers(requestParameters,HttpContext);

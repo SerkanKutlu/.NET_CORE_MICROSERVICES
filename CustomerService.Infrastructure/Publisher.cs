@@ -1,53 +1,37 @@
-﻿using Common.Commands;
-using Common.Events;
+﻿using System.Text;
+using System.Text.Json;
 using CustomerService.Application.Interfaces;
 using CustomerService.Domain.Entities;
-using MassTransit;
+using RabbitMQ.Client;
 
 namespace CustomerService.Infrastructure;
 
 public class Publisher:IPublisher
 {
-    private readonly IBus _bus;
-
-    public Publisher(IBus bus)
+    private readonly IModel _channel;
+    private readonly IConnection _connection;
+    
+    public Publisher()
     {
-        _bus = bus;
-    }
-
-    public async Task PublishCustomerCreatedEvent(Customer customer)
-    {
-        await Task.Run(() =>
+        var factory = new ConnectionFactory
         {
-            _bus.Publish<ICustomerCreated>(new
-            {
-                CustomerId = customer.Id,
-                LogMessage = $"New customer added with id {customer.Id}",
-                customer.CreatedAt
-            });
-        });
-    }
+            HostName = "localhost"
+        };
 
-    public async Task PublishCustomerUpdatedEvent(Customer customer)
-    {
-        await Task.Run(() =>
-        {
-            _bus.Publish<ICustomerUpdated>(new
-            {
-                CustomerId = customer.Id,
-                LogMessage =$"Customer with id {customer.Id} updated.",
-                customer.UpdatedAt
-            });
-        });
+        _connection = factory.CreateConnection();
+        _channel = _connection.CreateModel();
     }
-
-    public async Task SendDeleteCustomerRelatedOrdersCommand(string customerId)
+    public void Publish(Customer customer)
     {
-        var uri = new Uri("rabbitmq://localhost/customer.delete");
-        var ep = await _bus.GetSendEndpoint(uri);
-        await ep.Send<IDeleteCustomerRelatedOrders>(new
-        {
-            CustomerId = customerId
-        });
+        const string exchangeName = "topicExchange";
+        const string routingKey = "top.route";
+        _channel.ExchangeDeclare(exchangeName, type: ExchangeType.Topic,durable:true);
+
+        
+        var message = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(customer));
+        var basicProperties = _channel.CreateBasicProperties();
+        basicProperties.Persistent = true;
+        _channel.BasicPublish(exchange: exchangeName, routingKey: routingKey, body: message);
+        _connection.Close();
     }
 }

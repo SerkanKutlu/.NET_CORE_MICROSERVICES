@@ -41,32 +41,8 @@ public static class ApplicationExtensions
             }));
 
         services.AddScoped<ICustomerRequestService, CustomerRequestService>();
-        services.AddScoped<IPublisher, Publisher>();
+        services.AddTransient<IPublisher, Publisher>();
         
-        //Mass Transit
-        services.AddMassTransit(x =>
-        {
-
-            x.UsingRabbitMq((context,cfg) =>
-            {
-                cfg.Host("localhost", "/", h => {
-                    h.Username("guest");
-                    h.Password("guest");
-                });
-            });
-        });
-        
-        // services.AddMassTransit(x =>
-        // {
-        //     x.AddBus(provider => Bus.Factory.CreateUsingRabbitMq(config =>
-        //     {
-        //         config.Host(new Uri("rabbitmq://localhost"), h =>
-        //         {
-        //             h.Username("guest");
-        //             h.Password("guest");
-        //         });
-        //     }));
-        // });
         return services;
     }
 }
