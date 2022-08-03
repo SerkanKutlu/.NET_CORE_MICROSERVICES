@@ -5,9 +5,9 @@ using OrderService.Domain.Entities;
 
 namespace OrderService.Application.Interfaces;
 
-public interface IOrderService
+public interface IOrderRequestService
 {
-    Task<PagedList<Order>> GetOrdersPaged(RequestParameters requestParameters,HttpContext context);
+    Task<PagedList<Order>> GetAll(RequestParameters requestParameters,HttpContext context);
     Task<Order> GetById(string id);
     Task<PagedList<Order>> GetOrdersOfCustomers(string customerId, RequestParameters requestParameters,HttpContext context);
     Task<string> CreateOrder(OrderForCreationDto newOrder,HttpContext context);

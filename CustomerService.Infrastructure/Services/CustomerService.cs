@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace CustomerService.Infrastructure.Services;
 
-public class CustomerService : ICustomerService
+public class CustomerService : ICustomerRequestService
 {
     private readonly ILogger<CustomerService> _logger;
     private readonly ICustomerRepository _customerRepository;
@@ -22,9 +22,9 @@ public class CustomerService : ICustomerService
         _publisher = publisher;
     }
 
-    public async Task<PagedList<Customer>> GetCustomersPaged(RequestParameters requestParameters, HttpContext context)
+    public async Task<PagedList<Customer>> GetAllCustomers(RequestParameters requestParameters, HttpContext context)
     {
-        var customers = await _customerRepository.GetCustomersPaged(requestParameters);
+        var customers = await _customerRepository.GetAll(requestParameters);
         context.Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(customers.MetaData));
         _logger.LogInformation("Getting all customers data's from database");
         return customers;

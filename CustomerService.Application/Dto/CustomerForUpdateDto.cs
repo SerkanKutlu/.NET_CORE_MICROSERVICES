@@ -16,6 +16,7 @@ public class CustomerForUpdateDto
         {
             Address = Address,
             Email = Email.ToLowerInvariant(),
+            CreatedAt = DateTime.MinValue,
             UpdatedAt = DateTime.UtcNow,
             Id = Id,
             Name = Name

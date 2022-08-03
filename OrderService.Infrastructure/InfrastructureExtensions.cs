@@ -34,8 +34,7 @@ public static class InfrastructureExtensions
         
         //Unknown
         services.AddScoped<IPublisher, Publisher>();
-        services.AddScoped<IOrderService, Services.OrderService>();
-        services.AddScoped<IProductService, ProductService>();
+        services.AddScoped<IOrderRequestService, OrderRequestService>();
         services.AddHttpClient("httpClient")
             .AddPolicyHandler(Policy.TimeoutAsync(20, (context, timeSpan, task) =>
             {

@@ -1,22 +1,29 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Text.Json;
+using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using OrderService.Application.DTO;
 using OrderService.Application.Interfaces;
 using OrderService.Application.Models;
+using OrderService.Domain.Entities;
 
 namespace OrderServiceClean.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
 public class ProductController : ControllerBase
-{
-    private readonly IProductService _productService;
-
-    public ProductController(IProductService productService)
     {
-        _productService = productService;
-    }
-
-    #region Get Requests
+        private readonly IMapper _mapper;
+        private readonly ILogger<ProductController> _logger;
+        private readonly IProductRepository _productRepository;
+        private readonly IOrderRepository _orderRepository;
+        public ProductController(IProductRepository orderRepository, ILogger<ProductController> logger, IMapper mapper, IOrderRepository orderRepository1)
+        {
+            _productRepository = orderRepository;
+            _logger = logger;
+            _mapper = mapper;
+            _orderRepository = orderRepository1;
+        }
+        #region Get Requests
 
         /// <summary>
         /// List all products
@@ -25,9 +32,11 @@ public class ProductController : ControllerBase
         /// <response code="200">Successful Response</response>
         /// <response code="500">Server Error</response>
         [HttpGet]
-        public async Task<IActionResult> GetProductsPaged([FromQuery] RequestParameters requestParameters)
+        public async Task<IActionResult> GetAll([FromQuery] RequestParameters requestParameters)
         {
-            var products = await _productService.GetProductsPaged(requestParameters, HttpContext);
+            var products = await _productRepository.GetAll(requestParameters);
+            Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(products.MetaData));
+            _logger.LogInformation("Getting all products data's from database");
             return Ok(products);
         }
         
@@ -41,7 +50,8 @@ public class ProductController : ControllerBase
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(string id)
         {
-            var product = await _productService.GetById(id);
+            var product = await _productRepository.GetWithId(id);
+            _logger.LogInformation($"Getting product data with {id} from database");
             return Ok(product);
         }
         #endregion
@@ -58,8 +68,10 @@ public class ProductController : ControllerBase
         [HttpPost]
         public async Task<IActionResult> CreateProduct([FromBody] ProductForCreationDto productForCreation)
         {
-            var productId =await _productService.CreateProduct(productForCreation, HttpContext);
-            return Ok(productId);
+            var product = _mapper.Map<Product>(productForCreation);
+            await _productRepository.CreateAsync(product);
+            _logger.LogInformation($"New product added with id {product.Id}");
+            return CreatedAtAction("GetById", new {id = product.Id}, product);
         }
         #endregion
         
@@ -75,7 +87,9 @@ public class ProductController : ControllerBase
         [HttpPut]
         public async Task<IActionResult> UpdateProduct([FromBody] ProductForUpdateDto productForUpdate)
         {
-            var product = await _productService.UpdateProduct(productForUpdate);
+            var product = _mapper.Map<Product>(productForUpdate);
+            await _productRepository.UpdateAsync(product);
+            _logger.LogInformation($"Product with id {product.Id} updated.");
             return Ok(product);
         }
         #endregion
@@ -92,7 +106,12 @@ public class ProductController : ControllerBase
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduct(string id)
         {
-            await _productService.DeleteProduct(id);
+
+            await _orderRepository.UpdateProductRelatedOrders(id);
+            //Delete product
+            await _productRepository.DeleteAsync(id);
+            //Logging and return
+            _logger.LogInformation($"Product with id {id} deleted.");
             return Ok();
         }
         #endregion
