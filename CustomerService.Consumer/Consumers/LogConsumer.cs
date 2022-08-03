@@ -1,23 +1,25 @@
 ﻿using System.Text;
+using System.Text.Json;
+using CustomerService.Application.Dto;
 using RabbitMQ.Client;
 namespace CustomerService.Consumer.Consumers;
 
-public class LogConsumer :ConsumerBase, IConsumer
+public class LogConsumer :ConsumerBase<LogConsumer>
 {
-    public LogConsumer(string exchangeName, string routingKey,string queueName) : base(exchangeName,routingKey,queueName)
+    public LogConsumer(string exchangeName, string routingKey,string queueName,ILogger<LogConsumer> logger) : base(exchangeName,routingKey,queueName,logger)
     {
     }
     
-    public Task StartConsumer()
+    public void StartConsumer()
     {
         Consumer.Received += (model,ea) =>
         {
-            var body = ea.Body.ToArray();
-            var message = Encoding.UTF8.GetString(body);
-            Console.WriteLine(" [x] Received {0}", message);
-            //Channel.BasicAck(ea.DeliveryTag, false);
+            var message = Encoding.UTF8.GetString(ea.Body.ToArray());
+            var customerForLog = JsonSerializer.Deserialize<CustomerForLogDTO>(message);
+            var logMessage = $"A customer is {customerForLog?.Action}. {customerForLog}";
+            Logger.LogInformation(logMessage);
+            Channel.BasicAck(ea.DeliveryTag, false);
         };
         Channel.BasicConsume(queue: QueueName, consumer: Consumer, autoAck: false);
-        return Task.CompletedTask;
     }
 }

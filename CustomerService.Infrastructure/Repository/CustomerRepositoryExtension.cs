@@ -16,7 +16,6 @@ public static class CustomerRepositoryExtension
                 customers.Find(c=>true) : 
                 customers.Find(c => c.Name.ToLower() //Searching according to name
                     .Contains(searchTerm.Trim().ToLower()),findOptions);
-            
         }
 
         public static IFindFluent<Customer, Customer> CustomSort(this IFindFluent<Customer, Customer> customers,

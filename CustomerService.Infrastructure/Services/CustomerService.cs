@@ -9,15 +9,15 @@ using Microsoft.Extensions.Logging;
 
 namespace CustomerService.Infrastructure.Services;
 
-public class CustomerRequestService : ICustomerRequestService
+public class CustomerService : ICustomerRequestService
 {
-    private readonly ILogger<CustomerRequestService> _logger;
+    private readonly ILogger<CustomerService> _logger;
     private readonly IMapper _mapper;
     private readonly ICustomerRepository _customerRepository;
     private readonly ICustomerHelper _customerHelper;
     private readonly IPublisher _publisher;
-    public CustomerRequestService(ICustomerHelper customerHelper, ICustomerRepository customerRepository,
-        IMapper mapper, ILogger<CustomerRequestService> logger, IPublisher publisher)
+    public CustomerService(ICustomerHelper customerHelper, ICustomerRepository customerRepository,
+        IMapper mapper, ILogger<CustomerService> logger, IPublisher publisher)
     {
         _customerHelper = customerHelper;
         _customerRepository = customerRepository;
@@ -38,7 +38,6 @@ public class CustomerRequestService : ICustomerRequestService
     {
         var customer = await _customerRepository.GetWithId(id);
         _logger.LogInformation($"Getting customer data with {id} from database");
-        _publisher.Publish(customer);
         return customer;
     }
 
@@ -54,8 +53,9 @@ public class CustomerRequestService : ICustomerRequestService
         await _customerRepository.CreateAsync(customer);
         context.Response.Headers.Add("location",
             $"https://{context.Request.Headers["Host"]}/api/Customers/{customer.Id}");
-        //_logger.LogInformation($"New customer added with id {customer.Id}");
-        //await _publisher.PublishCustomerCreatedEvent(customer);
+        var customerForLog = _mapper.Map<CustomerForLogDTO>(customer);
+        customerForLog.Action = "Created";
+        _publisher.Publish(customerForLog);
         return customer.Id;
     }
 
@@ -64,8 +64,9 @@ public class CustomerRequestService : ICustomerRequestService
         var customer = _mapper.Map<Customer>(customerForUpdate);
         await _customerHelper.SetCreatedAt(customer);
         await _customerRepository.UpdateAsync(customer);
-        //_logger.LogInformation($"Customer with id {customer.Id} updated.");
-        //await _publisher.PublishCustomerUpdatedEvent(customer);
+        var customerForLog = _mapper.Map<CustomerForLogDTO>(customer);
+        customerForLog.Action = "Updated";
+        _publisher.Publish(customerForLog);
         return customer;
     }
 

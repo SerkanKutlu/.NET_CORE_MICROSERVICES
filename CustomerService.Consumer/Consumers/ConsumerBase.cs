@@ -5,13 +5,16 @@ using RabbitMQ.Client.Events;
 
 namespace CustomerService.Consumer.Consumers;
 
-public abstract class ConsumerBase
+public abstract class ConsumerBase<T>
 {
     protected readonly IModel Channel;
     protected readonly string QueueName; 
     protected readonly EventingBasicConsumer Consumer;
-    public ConsumerBase(string exchangeName, string routingKey,string queueName)
+    protected readonly ILogger<T> Logger;
+
+    protected ConsumerBase(string exchangeName, string routingKey,string queueName, ILogger<T> logger)
     {
+        Logger = logger;
         var connectionFactory = new ConnectionFactory
         {
             HostName = "localhost"

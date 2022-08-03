@@ -8,7 +8,6 @@ public class MappingProfile: Profile
 {
     public MappingProfile()
     {
-            
         CreateMap<CustomerForCreationDto,Customer>().
             ForMember(dest=>dest.CreatedAt,operation=>operation
                 .MapFrom(source=>DateTime.Now.ToUniversalTime())).
@@ -18,5 +17,6 @@ public class MappingProfile: Profile
                 .MapFrom(source => DateTime.Now.ToUniversalTime())).
             ForMember(dest=>dest.Email, operation=>operation
                 .MapFrom(source=>source.Email.ToLower()));
+        CreateMap<Customer,CustomerForLogDTO>();
     }
 }

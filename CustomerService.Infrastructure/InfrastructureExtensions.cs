@@ -40,8 +40,9 @@ public static class ApplicationExtensions
             {
             }));
 
-        services.AddScoped<ICustomerRequestService, CustomerRequestService>();
-        services.AddTransient<IPublisher, Publisher>();
+        services.AddScoped<ICustomerRequestService, Services.CustomerService>();
+        
+        services.AddSingleton<IPublisher, Publisher>();
         
         return services;
     }

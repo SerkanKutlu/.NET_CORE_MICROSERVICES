@@ -48,8 +48,6 @@ builder.AddSeriLogConfiguration();
 #endregion
 #region Authentication
 
-
-
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(JwtBearerDefaults.AuthenticationScheme,options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters

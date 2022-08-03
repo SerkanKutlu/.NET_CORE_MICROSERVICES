@@ -9,10 +9,11 @@ namespace CustomerService.Infrastructure.Repository;
 public class CustomerRepository : ICustomerRepository
 {
     private readonly IMongoService _mongoService;
+    public IMongoCollection<Customer> Customers { get; set; }
     public CustomerRepository(IMongoService mongoService)
     {
         _mongoService = mongoService;
-          
+        Customers = _mongoService.Customers;
     }
     
     
@@ -40,12 +41,6 @@ public class CustomerRepository : ICustomerRepository
         
     public async Task<PagedList<Customer>> GetAll(RequestParameters requestParameters)
     {
-        // var customers= await _mongoService.Customers.
-        //      Search(requestParameters.SearchTerm)
-        //     .CustomSort(requestParameters.OrderBy)
-        //     .Skip((requestParameters.PageNumber - 1) * requestParameters.PageSize)
-        //     .Limit(requestParameters.PageSize)
-        //     .ToListAsync();
         var customers = await _mongoService.Customers
             .Search(requestParameters.SearchTerm)
             .CustomSort(requestParameters.OrderBy).ToListAsync();

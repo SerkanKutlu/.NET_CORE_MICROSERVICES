@@ -4,19 +4,25 @@ namespace CustomerService.Consumer;
 
 public class Worker : BackgroundService
 {
-   // private readonly ILogger<Worker> _logger;
-    public Worker()//ILogger<Worker> logger)
+    private readonly LogConsumer _logConsumer;
+    private readonly ExtraConsumer _extraConsumer;
+    public Worker(LogConsumer logConsumer, ExtraConsumer extraConsumer)
     {
-        //_logger = logger;
+        _logConsumer = logConsumer;
+        _extraConsumer = extraConsumer;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-      
-        IConsumer consumer = new LogConsumer("topicExchange", "top.route","queue1");
-       // IConsumer extraConsumer = new ExtraConsumer("topicExchange", "top.route","extra_queue");
-        await consumer.StartConsumer();
-        //await extraConsumer.StartConsumer();
+        await Task.Run(() =>
+        {
+            _logConsumer.StartConsumer();
+        },stoppingToken);
+        await Task.Run(() =>
+        {
+            _extraConsumer.StartConsumer();
+        },stoppingToken);
+        
         while (!stoppingToken.IsCancellationRequested)
         {
             
