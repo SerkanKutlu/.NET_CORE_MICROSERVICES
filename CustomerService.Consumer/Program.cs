@@ -7,15 +7,14 @@ host.ConfigureServices(services =>
 {
     services.AddHostedService<Worker>();
     services.AddSingleton<LogConsumer>(sp =>
-        new LogConsumer("topicExchange", "customer.log","queue.log",sp.GetRequiredService<ILogger<LogConsumer>>()));
-    services.AddSingleton<ExtraConsumer>(sp =>
-        new ExtraConsumer("topicExchange", "customer.log","queue.extra",sp.GetRequiredService<ILogger<ExtraConsumer>>()));
+        new LogConsumer("customerExchange", "customer.log","logQueue",sp.GetRequiredService<ILogger<LogConsumer>>()));
 });
 
 host.ConfigureLogging(loggingBuilder =>
 {
+    var environmentName = Environment.GetEnvironmentVariables()["DOTNET_ENVIRONMENT"];
     var configuration = new ConfigurationBuilder()
-        .AddJsonFile("appsettings.json")
+        .AddJsonFile($"appsettings.{environmentName}.json")
         .Build();
     
     var logger = new LoggerConfiguration()

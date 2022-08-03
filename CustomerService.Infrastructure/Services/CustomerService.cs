@@ -49,7 +49,8 @@ public class CustomerService : ICustomerRequestService
         await _customerRepository.CreateAsync(customer);
         context.Response.Headers.Add("location",
             $"https://{context.Request.Headers["Host"]}/api/Customers/{customer.Id}");
-        var customerForLog = new CustomerForLogDto(customer, "Created");
+        var customerForLog = new CustomerForLogDto();
+        customerForLog.FillWithCustomer(customer,"Created");
         _publisher.PublishForLog(customerForLog);
         return customer.Id;
     }
@@ -59,7 +60,8 @@ public class CustomerService : ICustomerRequestService
         var customer = customerForUpdate.ToCustomer();
         await _customerHelper.SetCreatedAt(customer);
         await _customerRepository.UpdateAsync(customer);
-        var customerForLog = new CustomerForLogDto(customer, "Updated");
+        var customerForLog = new CustomerForLogDto();
+        customerForLog.FillWithCustomer(customer,"Updated");
         _publisher.PublishForLog(customerForLog);
         return customer;
     }
@@ -67,7 +69,6 @@ public class CustomerService : ICustomerRequestService
     public async Task DeleteCustomer(string id)
     {
         await _customerRepository.DeleteAsync(id);
-        //await _publisher.SendDeleteCustomerRelatedOrdersCommand(id);
         _logger.LogInformation($"Customer with id {id} deleted.");
     }
 }

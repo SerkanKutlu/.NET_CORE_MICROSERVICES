@@ -5,11 +5,10 @@ namespace CustomerService.Consumer;
 public class Worker : BackgroundService
 {
     private readonly LogConsumer _logConsumer;
-    private readonly ExtraConsumer _extraConsumer;
-    public Worker(LogConsumer logConsumer, ExtraConsumer extraConsumer)
+    public Worker(LogConsumer logConsumer)
     {
         _logConsumer = logConsumer;
-        _extraConsumer = extraConsumer;
+      
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -18,10 +17,7 @@ public class Worker : BackgroundService
         {
             _logConsumer.StartConsumer();
         },stoppingToken);
-        await Task.Run(() =>
-        {
-            _extraConsumer.StartConsumer();
-        },stoppingToken);
+        
         
         while (!stoppingToken.IsCancellationRequested)
         {

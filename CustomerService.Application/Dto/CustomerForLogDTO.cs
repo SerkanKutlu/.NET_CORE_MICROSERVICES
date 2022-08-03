@@ -5,15 +5,21 @@ namespace CustomerService.Application.Dto;
 
 public class CustomerForLogDto
 {
-    private string Id { get; }
-    private string Name { get; }
-    private string Email { get; }
-    private Address Address { get;  }
-    private DateTime CreatedAt { get; }
-    private DateTime UpdatedAt { get; }
-    public string Action { get; }
+    public string Id { get; set; }
+    public string Name { get;set; }
+    public string Email { get;set; }
+    public Address Address { get; set; }
+    public DateTime CreatedAt { get;set; }
+    public DateTime UpdatedAt { get; set;}
+    public string Action { get; set;}
+    
 
-    public CustomerForLogDto(Customer customer,string action)
+    public override string ToString()
+    {
+        return $"Id: {Id}, Name:{Name}, Email:{Email}, Address: {Address}, Created: {CreatedAt}, Updated:{UpdatedAt}";
+    }
+    
+    public void FillWithCustomer(Customer customer, string action)
     {
         Address = customer.Address;
         Email = customer.Email;
@@ -23,11 +29,5 @@ public class CustomerForLogDto
         Name = customer.Name;
         Action = action;
     }
-
-    public override string ToString()
-    {
-        return $"Id: {Id}, Name:{Name}, Email:{Email}, Address: {Address}, Created: {CreatedAt}, Updated:{UpdatedAt}";
-    }
-    
     
 }

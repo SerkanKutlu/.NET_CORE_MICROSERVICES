@@ -9,8 +9,9 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
+var environmentName = builder.Environment.EnvironmentName;
 builder.Configuration.SetBasePath(builder.Environment.ContentRootPath)
-    .AddJsonFile("appsettings.json", true, true)
+    .AddJsonFile($"appsettings.{environmentName}.json", true, true)
     .AddEnvironmentVariables();
 // Add services to the container.
 
@@ -65,11 +66,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+// if (app.Environment.IsDevelopment())
+// {
+//     app.UseSwagger();
+//     app.UseSwaggerUI();
+// }
+app.UseSwagger();
+app.UseSwaggerUI();
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseHttpsRedirection();
 
