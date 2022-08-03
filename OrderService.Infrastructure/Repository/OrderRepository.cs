@@ -9,23 +9,23 @@ namespace OrderService.Infrastructure.Repository;
 
 public class OrderRepository : IOrderRepository
 {
-    private readonly IMongoService _mongoService;
+    private readonly IMongoCollection<Order> _orders;
 
     public OrderRepository(IMongoService mongoService)
     {
-        _mongoService = mongoService;
+        _orders = mongoService.Orders;
     }
 
 
     public async Task CreateAsync(Order newOrder)
     {
-        await _mongoService.Orders.InsertOneAsync(newOrder);
+        await _orders.InsertOneAsync(newOrder);
     }
 
 
     public async Task UpdateAsync(Order updatedOrder)
     {
-        var result = await _mongoService.Orders.ReplaceOneAsync(o => o.Id == updatedOrder.Id, updatedOrder);
+        var result = await _orders.ReplaceOneAsync(o => o.Id == updatedOrder.Id, updatedOrder);
         if (!result.IsModifiedCountAvailable && result.ModifiedCount == 0)
             throw new NotFoundException<Order>(updatedOrder.Id);
     }
@@ -33,15 +33,15 @@ public class OrderRepository : IOrderRepository
 
     public async Task DeleteAsync(string orderId)
     {
-        var result = await _mongoService.Orders.DeleteOneAsync(o => o.Id == orderId);
+        var result = await _orders.DeleteOneAsync(o => o.Id == orderId);
         if (result.DeletedCount == 0)
             throw new NotFoundException<Order>(orderId);
     }
 
 
-    public async Task<PagedList<Order>> GetAll(RequestParameters requestParameters)
+    public async Task<PagedList<Order>> GetOrdersPaged(RequestParameters requestParameters)
     {
-        var orders = await _mongoService.Orders
+        var orders = await _orders
             .Search(requestParameters.SearchTerm)
             .CustomSort(requestParameters.OrderBy)
             .ToListAsync();
@@ -55,8 +55,7 @@ public class OrderRepository : IOrderRepository
 
     public async Task<Order> GetWithId(string orderId)
     {
-        var order = await _mongoService.Orders.Find(o => o.Id == orderId).FirstOrDefaultAsync();
-        var x = new FormatException();
+        var order = await _orders.Find(o => o.Id == orderId).FirstOrDefaultAsync();
         if (order == null)
             throw new NotFoundException<Order>(orderId);
         return order;
@@ -65,7 +64,7 @@ public class OrderRepository : IOrderRepository
 
     public async Task ChangeStatus(string orderId, string newStatus)
     {
-        var result = await _mongoService.Orders.UpdateOneAsync(
+        var result = await _orders.UpdateOneAsync(
             o => o.Id == orderId,
             Builders<Order>.Update
                 .Set(o => o.Status, newStatus));
@@ -77,7 +76,7 @@ public class OrderRepository : IOrderRepository
 
     public async Task<PagedList<Order>> GetOrdersOfCustomer(string customerId, RequestParameters requestParameters)
     {
-        var orders = await _mongoService.Orders
+        var orders = await _orders
             .Search(requestParameters.SearchTerm, customerId)
             .CustomSort(requestParameters.OrderBy)
             .ToListAsync();
@@ -90,22 +89,18 @@ public class OrderRepository : IOrderRepository
 
     public async Task<bool> DeleteOrderOfCustomer(string customerId)
     {
-        var result = await _mongoService.Orders.DeleteManyAsync(o => o.CustomerId == customerId);
+        var result = await _orders.DeleteManyAsync(o => o.CustomerId == customerId);
         return result.DeletedCount > 0;
     }
 
-    public async Task UpdateProductRelatedOrders(string productId)
+    public async Task UpdateProductRelatedOrders(Product product)
     {
-        var product =await _mongoService.Products.Find(p => p.Id == productId).FirstOrDefaultAsync();
-        if (product == null)
-        {
-            throw new NotFoundException<Product>(productId);
-        }
+        
         var builder = Builders<Order>.Filter;
-        var filter = builder.AnyEq(o => o.ProductIds, productId);
-        await _mongoService.Orders.Find(filter).ForEachAsync(async order =>
+        var filter = builder.AnyEq(o => o.ProductIds, product.Id);
+        await _orders.Find(filter).ForEachAsync(async order =>
         {
-            order.ProductIds.Remove(productId);
+            order.ProductIds.Remove(product.Id);
             if (order.ProductIds.Count == 0)
                 await DeleteAsync(order.Id);
             else

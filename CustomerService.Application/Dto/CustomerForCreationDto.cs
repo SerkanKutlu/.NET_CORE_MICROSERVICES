@@ -17,7 +17,6 @@ public class CustomerForCreationDto
         {
             Address = Address,
             Email = Email.ToLowerInvariant(),
-            UpdatedAt = DateTime.MinValue,
             CreatedAt = DateTime.UtcNow,
             Id = Guid.NewGuid().ToString(),
             Name = Name

@@ -9,23 +9,22 @@ namespace OrderService.Infrastructure.Repository;
 
 public class ProductRepository : IProductRepository
 {
-    private readonly IMongoService _mongoService;
-
+    private readonly IMongoCollection<Product> _products;
     public ProductRepository(IMongoService mongoService)
     {
-        _mongoService = mongoService;
+        _products = mongoService.Products;
     }
 
    
     public async Task CreateAsync(Product newProduct)
     {
-        await _mongoService.Products.InsertOneAsync(newProduct);
+        await _products.InsertOneAsync(newProduct);
     }
 
     
     public async Task UpdateAsync(Product updatedProduct)
     {
-        var result = await _mongoService.Products.ReplaceOneAsync(p => p.Id == updatedProduct.Id, updatedProduct);
+        var result = await _products.ReplaceOneAsync(p => p.Id == updatedProduct.Id, updatedProduct);
         if (!result.IsModifiedCountAvailable && result.ModifiedCount == 0)
             throw new NotFoundException<Product>(updatedProduct.Id);
     }
@@ -33,14 +32,14 @@ public class ProductRepository : IProductRepository
         
     public async Task DeleteAsync(string productId)
     { 
-        var result = await _mongoService.Products.DeleteOneAsync(p => p.Id == productId);
+        var result = await _products.DeleteOneAsync(p => p.Id == productId);
         if (result.DeletedCount == 0)
             throw new NotFoundException<Product>(productId);
     }
      
     public async Task<PagedList<Product>> GetAll(RequestParameters requestParameters)
     {
-        var products = await _mongoService.Products.
+        var products = await _products.
             Search(requestParameters.SearchTerm)
             .CustomSort(requestParameters.OrderBy)
             .ToListAsync();
@@ -51,7 +50,7 @@ public class ProductRepository : IProductRepository
 
     public async Task<Product> GetWithId(string productId)
     {
-        var product = await _mongoService.Products.Find(p => p.Id == productId).FirstOrDefaultAsync();
+        var product = await _products.Find(p => p.Id == productId).FirstOrDefaultAsync();
         if (product == null)
             throw new NotFoundException<Product>(productId);
         return product;

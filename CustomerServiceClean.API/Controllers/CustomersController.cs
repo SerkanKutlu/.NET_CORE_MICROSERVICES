@@ -11,8 +11,8 @@ namespace CustomerServiceClean.API.Controllers;
 
 public class CustomersController : ControllerBase
 {
-    private readonly ICustomerRequestService _customerService;
-    public CustomersController(ICustomerRequestService customerService)
+    private readonly ICustomerService _customerService;
+    public CustomersController(ICustomerService customerService)
     {
         _customerService = customerService;
     }
@@ -27,9 +27,9 @@ public class CustomersController : ControllerBase
     /// <response code="500">Server Error</response>
     [HttpGet]
     //[Authorize]
-    public async Task<IActionResult> GetAll([FromQuery] RequestParameters requestParameters)
+    public async Task<IActionResult> GetPaged([FromQuery] RequestParameters requestParameters)
     {
-        var customers = await _customerService.GetAllCustomers(requestParameters,HttpContext);
+        var customers = await _customerService.GetCustomersPaged(requestParameters,HttpContext);
         return Ok(customers);
     }
     
@@ -48,6 +48,15 @@ public class CustomersController : ControllerBase
         var customer =await _customerService.GetById(id);
         return Ok(customer);
     }
+    
+    
+    // [HttpGet("sync/{id}")]
+    // //[Authorize(Roles = "Admin")]
+    // public async Task<IActionResult> GetByIdSync(string id)
+    // {
+    //     await Task.Delay(5000);
+    //     return Ok("YYYYY");
+    // }
     
     
     /// <summary>

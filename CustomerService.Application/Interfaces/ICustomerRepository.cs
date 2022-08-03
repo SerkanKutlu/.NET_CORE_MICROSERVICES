@@ -8,7 +8,7 @@ public interface ICustomerRepository
     Task CreateAsync(Customer newCustomer);
     Task UpdateAsync(Customer updatedCustomer);
     Task DeleteAsync(string customerId);
-    Task<PagedList<Customer>> GetAll(RequestParameters requestParameters);
+    Task<PagedList<Customer>> GetCustomersPaged(RequestParameters requestParameters);
     Task<Customer> GetWithId(string customerId);
     Task Validate(string customerId);
 }
