@@ -94,18 +94,13 @@ public class OrderRepository : IOrderRepository
         return result.DeletedCount > 0;
     }
 
-    public async Task UpdateProductRelatedOrders(string productId)
+    public async Task UpdateProductRelatedOrders(Product product)
     {
-        var product =await _mongoService.Products.Find(p => p.Id == productId).FirstOrDefaultAsync();
-        if (product == null)
-        {
-            throw new NotFoundException<Product>(productId);
-        }
-        var builder = Builders<Order>.Filter;
-        var filter = builder.AnyEq(o => o.ProductIds, productId);
+      var builder = Builders<Order>.Filter;
+        var filter = builder.AnyEq(o => o.ProductIds, product.Id);
         await _mongoService.Orders.Find(filter).ForEachAsync(async order =>
         {
-            order.ProductIds.Remove(productId);
+            order.ProductIds.Remove( product.Id);
             if (order.ProductIds.Count == 0)
                 await DeleteAsync(order.Id);
             else

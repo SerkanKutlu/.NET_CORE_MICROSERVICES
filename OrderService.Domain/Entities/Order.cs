@@ -1,13 +1,10 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
+﻿
 using OrderService.Domain.ValueObjects;
 
 namespace OrderService.Domain.Entities;
 
 public class Order
 {
-    [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
     public string Id { get; set; }
     public string CustomerId { get; set; }
     public int Quantity { get; set; } //This will be set auto

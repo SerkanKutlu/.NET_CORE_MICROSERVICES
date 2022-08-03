@@ -16,8 +16,6 @@ public class MongoService : IMongoService
         var mongoDatabase = mongoClient.GetDatabase(mongoSettings.DatabaseName);
         Orders = mongoDatabase.GetCollection<Order>(mongoSettings.CollectionNames[nameof(Order)]);
         Products = mongoDatabase.GetCollection<Product>(mongoSettings.CollectionNames[nameof(Product)]);
-        SeedOrderData.SeedData(Orders);
-        SeedProductData.SeedData(Products);
-        
+
     }
 }

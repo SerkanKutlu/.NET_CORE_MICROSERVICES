@@ -1,5 +1,4 @@
 ﻿using System.Text.Json;
-using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using OrderService.Application.DTO;
@@ -10,16 +9,14 @@ using OrderService.Domain.Entities;
 
 namespace OrderService.Infrastructure.Services;
 
-public class OrderRequestService:IOrderRequestService
+public class OrderService:IOrderService
 {
-    private readonly IMapper _mapper;
-    private readonly ILogger<OrderRequestService> _logger;
+    private readonly ILogger<OrderService> _logger;
     private readonly IOrderRepository _orderRepository;
     private readonly IOrderHelper _orderHelper;
     private readonly IPublisher _publisher;
-    public OrderRequestService(IMapper mapper, ILogger<OrderRequestService> logger, IOrderRepository orderRepository, IOrderHelper orderHelper, IPublisher publisher)
+    public OrderService(ILogger<OrderService> logger, IOrderRepository orderRepository, IOrderHelper orderHelper, IPublisher publisher)
     {
-        _mapper = mapper;
         _logger = logger;
         _orderRepository = orderRepository;
         _orderHelper = orderHelper;
@@ -27,7 +24,7 @@ public class OrderRequestService:IOrderRequestService
     }
 
 
-    public async Task<PagedList<Order>> GetAll(RequestParameters requestParameters, HttpContext context)
+    public async Task<PagedList<Order>> GetPagedOrders(RequestParameters requestParameters, HttpContext context)
     {
         var orders = await _orderRepository.GetAll(requestParameters);
         context.Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(orders.MetaData));
@@ -42,7 +39,7 @@ public class OrderRequestService:IOrderRequestService
         return order;
     }
 
-    public async Task<PagedList<Order>> GetOrdersOfCustomers(string customerId, RequestParameters requestParameters, HttpContext context)
+    public async Task<PagedList<Order>> GetOrdersOfCustomersPaged(string customerId, RequestParameters requestParameters, HttpContext context)
     {
         var orders =await _orderRepository.GetOrdersOfCustomer(customerId,requestParameters);
         context.Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(orders.MetaData));
@@ -52,8 +49,7 @@ public class OrderRequestService:IOrderRequestService
 
     public async Task<string> CreateOrder(OrderForCreationDto newOrder, HttpContext context)
     {
-        var order = _mapper.Map<Order>(newOrder);
-            
+        var order = newOrder.ToOrder();
         await _orderHelper.SetTotalAmount(order);
         await _orderHelper.SetAddressOfOrder(order);
             
@@ -66,7 +62,7 @@ public class OrderRequestService:IOrderRequestService
 
     public async Task<Order> UpdateOrder(OrderForUpdateDto newOrder)
     {
-        var order = _mapper.Map<Order>(newOrder);
+        var order = newOrder.ToOrder();
         await _orderHelper.SetPersistentDataForUpdate(order);
         await _orderHelper.SetTotalAmount(order);
         await _orderRepository.UpdateAsync(order);

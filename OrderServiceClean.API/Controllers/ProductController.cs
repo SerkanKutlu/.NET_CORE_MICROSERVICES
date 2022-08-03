@@ -1,29 +1,22 @@
-﻿using System.Text.Json;
-using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using OrderService.Application.DTO;
 using OrderService.Application.Interfaces;
 using OrderService.Application.Models;
-using OrderService.Domain.Entities;
 
 namespace OrderServiceClean.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
 public class ProductController : ControllerBase
+{
+    private readonly IProductService _productService;
+
+    public ProductController(IProductService productService)
     {
-        private readonly IMapper _mapper;
-        private readonly ILogger<ProductController> _logger;
-        private readonly IProductRepository _productRepository;
-        private readonly IOrderRepository _orderRepository;
-        public ProductController(IProductRepository orderRepository, ILogger<ProductController> logger, IMapper mapper, IOrderRepository orderRepository1)
-        {
-            _productRepository = orderRepository;
-            _logger = logger;
-            _mapper = mapper;
-            _orderRepository = orderRepository1;
-        }
-        #region Get Requests
+        _productService = productService;
+    }
+
+    #region Get Requests
 
         /// <summary>
         /// List all products
@@ -34,9 +27,7 @@ public class ProductController : ControllerBase
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] RequestParameters requestParameters)
         {
-            var products = await _productRepository.GetAll(requestParameters);
-            Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(products.MetaData));
-            _logger.LogInformation("Getting all products data's from database");
+            var products = await _productService.GetProductsPaged(requestParameters, HttpContext);
             return Ok(products);
         }
         
@@ -50,8 +41,7 @@ public class ProductController : ControllerBase
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(string id)
         {
-            var product = await _productRepository.GetWithId(id);
-            _logger.LogInformation($"Getting product data with {id} from database");
+            var product = await _productService.GetById(id);
             return Ok(product);
         }
         #endregion
@@ -68,10 +58,8 @@ public class ProductController : ControllerBase
         [HttpPost]
         public async Task<IActionResult> CreateProduct([FromBody] ProductForCreationDto productForCreation)
         {
-            var product = _mapper.Map<Product>(productForCreation);
-            await _productRepository.CreateAsync(product);
-            _logger.LogInformation($"New product added with id {product.Id}");
-            return CreatedAtAction("GetById", new {id = product.Id}, product);
+            var productId =await _productService.CreateProduct(productForCreation, HttpContext);
+            return Ok(productId);
         }
         #endregion
         
@@ -87,9 +75,7 @@ public class ProductController : ControllerBase
         [HttpPut]
         public async Task<IActionResult> UpdateProduct([FromBody] ProductForUpdateDto productForUpdate)
         {
-            var product = _mapper.Map<Product>(productForUpdate);
-            await _productRepository.UpdateAsync(product);
-            _logger.LogInformation($"Product with id {product.Id} updated.");
+            var product =await _productService.UpdateProduct(productForUpdate);
             return Ok(product);
         }
         #endregion
@@ -107,11 +93,7 @@ public class ProductController : ControllerBase
         public async Task<IActionResult> DeleteProduct(string id)
         {
 
-            await _orderRepository.UpdateProductRelatedOrders(id);
-            //Delete product
-            await _productRepository.DeleteAsync(id);
-            //Logging and return
-            _logger.LogInformation($"Product with id {id} deleted.");
+            await _productService.DeleteProduct(id);
             return Ok();
         }
         #endregion

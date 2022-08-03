@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using OrderService.Application.ActionFilters;
 using OrderService.Application.DTO;
 using OrderService.Application.Interfaces;
 using OrderService.Application.Models;
@@ -11,9 +10,9 @@ namespace OrderServiceClean.API.Controllers;
 //[Authorize]
 public class OrderController : ControllerBase
 {
-    private readonly IOrderRequestService _orderRequestService;
+    private readonly IOrderService _orderRequestService;
 
-    public OrderController(IOrderRequestService orderRequestService)
+    public OrderController(IOrderService orderRequestService)
     {
         _orderRequestService = orderRequestService;
     }
@@ -30,7 +29,7 @@ public class OrderController : ControllerBase
         //[ResponseCache(Duration = 120)]
         public async Task<IActionResult> GetAll([FromQuery] RequestParameters requestParameters)
         {
-            var orders = await _orderRequestService.GetAll(requestParameters,HttpContext);
+            var orders = await _orderRequestService.GetPagedOrders(requestParameters,HttpContext);
             return Ok(orders);
         }
         
@@ -59,10 +58,9 @@ public class OrderController : ControllerBase
         /// <response code="404">Invalid Customer Id or No Order With The Customer</response>
         /// <response code="400">Invalid Id Format Error</response>
         [HttpGet("customer/{customerId}")]
-        [ServiceFilter(typeof(CustomerExistAttribute))]
         public async Task<IActionResult> GetOrdersOfCustomers(string customerId,[FromQuery] RequestParameters requestParameters)
         {
-            var orders =await _orderRequestService.GetOrdersOfCustomers(customerId, requestParameters, HttpContext);
+            var orders =await _orderRequestService.GetOrdersOfCustomersPaged(customerId, requestParameters, HttpContext);
             return Ok(orders);
         }
         #endregion
@@ -77,8 +75,6 @@ public class OrderController : ControllerBase
         /// <response code="500">Server Error</response>
         /// <response code="404">Invalid Customer or Product Id</response>
         [HttpPost]
-        [ServiceFilter(typeof(CustomerExistAttribute))]
-        [ServiceFilter(typeof(ProductExistAttribute))]
         public async Task<IActionResult> CreateOrder([FromBody] OrderForCreationDto newOrder)
         {
             var orderId =await _orderRequestService.CreateOrder(newOrder,HttpContext);
@@ -95,7 +91,6 @@ public class OrderController : ControllerBase
         /// <response code="500">Server Error</response>
         /// <response code="404">Invalid Order or Product Id</response>
         [HttpPut]
-        [ServiceFilter(typeof(ProductExistAttribute))]
         public async Task<IActionResult> UpdateOrder([FromBody] OrderForUpdateDto newOrder)
         {
             var order =await _orderRequestService.UpdateOrder(newOrder);
