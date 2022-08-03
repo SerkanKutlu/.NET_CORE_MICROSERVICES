@@ -7,9 +7,9 @@ host.ConfigureServices(services =>
 {
     services.AddHostedService<Worker>();
     services.AddSingleton<LogConsumer>(sp =>
-        new LogConsumer("topicExchange", "*.route","queue.log",sp.GetRequiredService<ILogger<LogConsumer>>()));
+        new LogConsumer("topicExchange", "customer.log","queue.log",sp.GetRequiredService<ILogger<LogConsumer>>()));
     services.AddSingleton<ExtraConsumer>(sp =>
-        new ExtraConsumer("topicExchange", "*.route","queue.extra",sp.GetRequiredService<ILogger<ExtraConsumer>>()));
+        new ExtraConsumer("topicExchange", "customer.log","queue.extra",sp.GetRequiredService<ILogger<ExtraConsumer>>()));
 });
 
 host.ConfigureLogging(loggingBuilder =>

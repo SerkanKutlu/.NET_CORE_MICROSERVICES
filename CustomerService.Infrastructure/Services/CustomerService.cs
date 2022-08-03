@@ -1,5 +1,4 @@
 ﻿using System.Text.Json;
-using AutoMapper;
 using CustomerService.Application.Dto;
 using CustomerService.Application.Interfaces;
 using CustomerService.Application.Models;
@@ -12,16 +11,13 @@ namespace CustomerService.Infrastructure.Services;
 public class CustomerService : ICustomerRequestService
 {
     private readonly ILogger<CustomerService> _logger;
-    private readonly IMapper _mapper;
     private readonly ICustomerRepository _customerRepository;
     private readonly ICustomerHelper _customerHelper;
     private readonly IPublisher _publisher;
-    public CustomerService(ICustomerHelper customerHelper, ICustomerRepository customerRepository,
-        IMapper mapper, ILogger<CustomerService> logger, IPublisher publisher)
+    public CustomerService(ICustomerHelper customerHelper, ICustomerRepository customerRepository,ILogger<CustomerService> logger, IPublisher publisher)
     {
         _customerHelper = customerHelper;
         _customerRepository = customerRepository;
-        _mapper = mapper;
         _logger = logger;
         _publisher = publisher;
     }
@@ -49,24 +45,22 @@ public class CustomerService : ICustomerRequestService
 
     public async Task<string> CreateCustomer(CustomerForCreationDto customerForCreation, HttpContext context)
     {
-        var customer = _mapper.Map<Customer>(customerForCreation);
+        var customer = customerForCreation.ToCustomer();
         await _customerRepository.CreateAsync(customer);
         context.Response.Headers.Add("location",
             $"https://{context.Request.Headers["Host"]}/api/Customers/{customer.Id}");
-        var customerForLog = _mapper.Map<CustomerForLogDTO>(customer);
-        customerForLog.Action = "Created";
-        _publisher.Publish(customerForLog);
+        var customerForLog = new CustomerForLogDto(customer, "Created");
+        _publisher.PublishForLog(customerForLog);
         return customer.Id;
     }
 
     public async Task<Customer> UpdateCustomer(CustomerForUpdateDto customerForUpdate)
     {
-        var customer = _mapper.Map<Customer>(customerForUpdate);
+        var customer = customerForUpdate.ToCustomer();
         await _customerHelper.SetCreatedAt(customer);
         await _customerRepository.UpdateAsync(customer);
-        var customerForLog = _mapper.Map<CustomerForLogDTO>(customer);
-        customerForLog.Action = "Updated";
-        _publisher.Publish(customerForLog);
+        var customerForLog = new CustomerForLogDto(customer, "Updated");
+        _publisher.PublishForLog(customerForLog);
         return customer;
     }
 

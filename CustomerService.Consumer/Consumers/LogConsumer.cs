@@ -15,7 +15,7 @@ public class LogConsumer :ConsumerBase<LogConsumer>
         Consumer.Received += (model,ea) =>
         {
             var message = Encoding.UTF8.GetString(ea.Body.ToArray());
-            var customerForLog = JsonSerializer.Deserialize<CustomerForLogDTO>(message);
+            var customerForLog = JsonSerializer.Deserialize<CustomerForLogDto>(message);
             var logMessage = $"A customer is {customerForLog?.Action}. {customerForLog}";
             Logger.LogInformation(logMessage);
             Channel.BasicAck(ea.DeliveryTag, false);

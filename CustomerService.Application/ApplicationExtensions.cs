@@ -23,8 +23,6 @@ public static class ApplicationExtensions
         //This will add all validators at these assembly. (default and at the documentation : scoped)
         services.AddFluentValidation();
         services.AddValidatorsFromAssemblyContaining<AddressValidation>();
-        //Auto Mapper
-        services.AddAutoMapper(Assembly.GetExecutingAssembly());
         //has to be scoped
         services.AddScoped<ICustomerHelper, CustomerHelper>();
         return services;

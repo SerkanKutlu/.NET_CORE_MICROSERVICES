@@ -5,5 +5,5 @@ namespace CustomerService.Application.Interfaces;
 
 public interface IPublisher
 {
-    void Publish(CustomerForLogDTO customer);
+    void PublishForLog(CustomerForLogDto customer);
 }

@@ -9,6 +9,9 @@ namespace CustomerService.Infrastructure;
 public class Publisher:IPublisher
 {
     private readonly IModel _channel;
+    private const string ExchangeName = "topicExchange";
+    private string _routingKey;
+    private readonly IBasicProperties _basicProperties;
     public Publisher()
     {
         var factory = new ConnectionFactory
@@ -16,18 +19,16 @@ public class Publisher:IPublisher
             HostName = "localhost"
         };
         var connection = factory.CreateConnection();
-        
         _channel = connection.CreateModel();
+        _channel.ExchangeDeclare(ExchangeName, type: ExchangeType.Topic,durable:true);
+        _basicProperties = _channel.CreateBasicProperties();
+        _basicProperties.Persistent = true;
     }
 
-    public void Publish(CustomerForLogDTO customer)
+    public void PublishForLog(CustomerForLogDto customer)
     {
-        const string exchangeName = "topicExchange";
-        const string routingKey = "top.route";
-        _channel.ExchangeDeclare(exchangeName, type: ExchangeType.Topic,durable:true);
+        _routingKey = "customer.log";
         var message = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(customer));
-        var basicProperties = _channel.CreateBasicProperties();
-        basicProperties.Persistent = true;
-        _channel.BasicPublish(exchange: exchangeName, routingKey: routingKey, body: message);
+        _channel.BasicPublish(exchange: ExchangeName, routingKey: _routingKey, body: message,basicProperties:_basicProperties);
     }
 }
