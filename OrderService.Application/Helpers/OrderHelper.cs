@@ -19,16 +19,16 @@ public class OrderHelper:IOrderHelper
         _orderRepository = orderRepository;
     }
 
-    public async Task CheckCustomer(string customerId)
-    {
-        var response =await _httpRequest.ValidateCustomerAsync(customerId);
-        if (response.StatusCode == HttpStatusCode.NotFound)
-            throw new NotFoundException<CustomerModel>(customerId);
-        if (response.StatusCode == HttpStatusCode.BadRequest)
-            throw new InvalidModelException();
-        if (response.StatusCode != HttpStatusCode.OK)
-            throw new ServerNotRespondingException();
-    }
+    // public async Task CheckCustomer(string customerId)
+    // {
+    //     var response =await _httpRequest.ValidateCustomerAsync(customerId);
+    //     if (response.StatusCode == HttpStatusCode.NotFound)
+    //         throw new NotFoundException<CustomerModel>(customerId);
+    //     if (response.StatusCode == HttpStatusCode.BadRequest)
+    //         throw new InvalidModelException();
+    //     if (response.StatusCode != HttpStatusCode.OK)
+    //         throw new ServerNotRespondingException();
+    // }
 
     public async Task SetAddressOfOrder(Order newOrder)
     {

@@ -2,7 +2,6 @@
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
-        <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <UserSecretsId>dotnet-CustomerService.Consumer-EE41BF9F-2139-4F01-A77E-740A52475017</UserSecretsId>
     </PropertyGroup>

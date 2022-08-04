@@ -3,8 +3,6 @@ using CustomerService.Application.Interfaces;
 using CustomerService.Infrastructure.HttpClient;
 using CustomerService.Infrastructure.Mongo;
 using CustomerService.Infrastructure.Repository;
-using CustomerService.Infrastructure.Services;
-using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -24,7 +22,7 @@ public static class ApplicationExtensions
         
         services.Configure<MongoSettings>(configuration.GetSection(nameof(MongoSettings)));
         //Has to be singleton
-        services.AddSingleton<IMongoSettings>(provider=>provider.GetRequiredService<IOptions<MongoSettings>>().Value);
+        services.AddSingleton<IMongoSettings>(provider=>provider.GetRequiredService<IOptionsSnapshot<MongoSettings>>().Value);
         
         //Definitely correct
         services.AddSingleton<IMongoService, MongoService>();

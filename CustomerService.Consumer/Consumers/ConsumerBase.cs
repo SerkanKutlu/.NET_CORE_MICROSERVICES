@@ -1,20 +1,19 @@
-﻿//using RabbitMQ.Client;
-
+﻿using CustomerService.Consumer.Interfaces;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
 namespace CustomerService.Consumer.Consumers;
 
-public abstract class ConsumerBase<T>
+public abstract class ConsumerBase
 {
     protected readonly IModel Channel;
     protected readonly string QueueName; 
     protected readonly EventingBasicConsumer Consumer;
-    protected readonly ILogger<T> Logger;
+    protected readonly IConsumerService ConsumerService;
 
-    protected ConsumerBase(string exchangeName, string routingKey,string queueName, ILogger<T> logger)
+    protected ConsumerBase(string exchangeName, string routingKey,string queueName, IConsumerService consumerService)
     {
-        Logger = logger;
+        ConsumerService = consumerService;
         var connectionFactory = new ConnectionFactory
         {
             HostName = "localhost"
@@ -25,4 +24,5 @@ public abstract class ConsumerBase<T>
         Channel.QueueBind(queueName,exchangeName,routingKey);
         Consumer = new EventingBasicConsumer(Channel);
     }
+    
 }

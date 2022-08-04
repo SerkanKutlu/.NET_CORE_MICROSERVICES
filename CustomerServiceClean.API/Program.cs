@@ -11,7 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 var builder = WebApplication.CreateBuilder(args);
 var environmentName = builder.Environment.EnvironmentName;
 builder.Configuration.SetBasePath(builder.Environment.ContentRootPath)
-    .AddJsonFile($"appsettings.{environmentName}.json", true, true)
+    .AddJsonFile($"appsettings.{environmentName}.json", false, true)
     .AddEnvironmentVariables();
 // Add services to the container.
 
