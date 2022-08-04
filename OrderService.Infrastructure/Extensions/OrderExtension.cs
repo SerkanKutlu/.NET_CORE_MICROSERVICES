@@ -10,35 +10,20 @@ public static class OrderExtension
      public static IFindFluent<Order,Order> Search(this IMongoCollection<Order> orders, string searchTerm,string searchArea, string customerId="")
         {
             
-           
+            var builder = Builders<Order>.Filter;
+            searchArea = char.ToUpper(searchArea[0]) + searchArea.Substring(1);
+            var filter = Builders<Order>.Filter.Regex(searchArea,new BsonRegularExpression(new Regex(searchTerm,RegexOptions.IgnoreCase)));
             if (customerId == "")
             {
                 if (string.IsNullOrWhiteSpace(searchTerm)) return orders.Find(c => true);
-                searchArea = char.ToUpper(searchArea[0]) + searchArea.Substring(1);
-                var filter = Builders<Order>.Filter.Regex(searchArea,new BsonRegularExpression(new Regex(searchTerm,RegexOptions.IgnoreCase)));
                 return orders.Find(filter);
             }
             if (string.IsNullOrWhiteSpace(searchTerm)) return orders.Find(c => c.CustomerId == customerId);
-            searchArea = char.ToUpper(searchArea[0]) + searchArea.Substring(1);
-            var filter2 = Builders<Order>.Filter.Regex(searchArea,new BsonRegularExpression(new Regex(searchTerm,RegexOptions.IgnoreCase)));
-            var combinedFilter = Builders<Order>.Filter.Eq("CustomerId", customerId) | filter2;
-            return orders.Find(combinedFilter);
-                
+            var filter2 = Builders<Order>.Filter.Eq("CustomerId", customerId);
+            filter &= filter2;
             
+            return orders.Find(filter);
             
-            var findOptions = new FindOptions()
-            {
-                Collation = new Collation("en", strength: CollationStrength.Secondary)
-            };
-            if(customerId == "")
-                return string.IsNullOrWhiteSpace(searchTerm) ?
-                    orders.Find(o=>true,findOptions) : 
-                    orders.Find(o => o.Address.City.ToLower()
-                        .Contains(searchTerm.Trim().ToLower()),findOptions);
-            return string.IsNullOrWhiteSpace(searchTerm) ?
-                orders.Find(o=>o.CustomerId == customerId,findOptions) : 
-                orders.Find(o => o.Address.City.ToLower()
-                    .Contains(searchTerm.Trim().ToLower()) && o.CustomerId == customerId,findOptions);
             
             
         }
