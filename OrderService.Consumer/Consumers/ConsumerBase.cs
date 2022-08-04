@@ -1,8 +1,8 @@
-﻿using CustomerService.Consumer.Interfaces;
+﻿using OrderService.Consumer.Interfaces;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
-namespace CustomerService.Consumer.Consumers;
+namespace OrderService.Consumer.Consumers;
 
 public abstract class ConsumerBase
 {

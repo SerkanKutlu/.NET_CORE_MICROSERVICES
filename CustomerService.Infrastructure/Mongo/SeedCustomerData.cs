@@ -22,7 +22,7 @@ public static class  SeedCustomerData
         {
             new Customer
             {
-                Id = "62d91541a2a411f44df899ce",
+                Id = Guid.NewGuid().ToString(),
                 Address = new Address
                 {
                     AddressLine = "cumhuriyet",

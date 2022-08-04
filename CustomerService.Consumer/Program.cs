@@ -18,7 +18,7 @@ host.ConfigureServices(services =>
     services.AddSingleton<IMongoSettings>(provider=>provider.GetRequiredService<IOptions<MongoSettings>>().Value);
     services.AddSingleton<IMongoService,MongoService>();
     services.AddSingleton(sp =>
-        new LogConsumer("customerExchange", "*.log","logQueue",sp.GetRequiredService<IConsumerService>()));
+        new LogConsumer("customerExchange", "*.log","CustomerLogQueue",sp.GetRequiredService<IConsumerService>()));
     
 });
 

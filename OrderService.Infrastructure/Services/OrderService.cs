@@ -56,7 +56,9 @@ public class OrderService:IOrderService
         await _orderRepository.CreateAsync(order);
         context.Response.Headers.Add("location",$"https://{context.Request.Headers["Host"]}/api/Orders/{order.Id}");
         _logger.LogInformation($"New order added with id {order.Id}");
-        await _publisher.PublishOrderCreatedEvent(order);
+        var orderForLogDto = new OrderForLogDto();
+        orderForLogDto.FillWithOrder(order,"Created");
+        _publisher.PublishForLog(orderForLogDto);
         return order.Id;
     }
 
@@ -67,7 +69,9 @@ public class OrderService:IOrderService
         await _orderHelper.SetTotalAmount(order);
         await _orderRepository.UpdateAsync(order);
         _logger.LogInformation($"Order with id {order.Id} updated.");
-        await _publisher.PublishOrderUpdatedEvent(order);
+        var orderForLogDto = new OrderForLogDto();
+        orderForLogDto.FillWithOrder(order,"Updated");
+        _publisher.PublishForLog(orderForLogDto);
         return order;
     }
 

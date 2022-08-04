@@ -1,9 +1,10 @@
-﻿using OrderService.Domain.Entities;
+﻿
+
+using OrderService.Application.DTO;
 
 namespace OrderService.Application.Interfaces;
 
 public interface IPublisher
 {
-    Task PublishOrderCreatedEvent(Order order);
-    Task PublishOrderUpdatedEvent(Order order);
+    public void PublishForLog(OrderForLogDto order);
 }

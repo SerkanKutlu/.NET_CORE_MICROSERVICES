@@ -27,7 +27,6 @@ public class Publisher:IPublisher
     public void PublishForLog(CustomerForLogDto customer)
     {
         _routingKey = "customer.log";
-        var x = JsonSerializer.Serialize(customer);
         var message = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(customer));
         _channel.BasicPublish(exchange: ExchangeName, routingKey: _routingKey, body: message,basicProperties:_basicProperties);
     }

@@ -1,42 +1,33 @@
-﻿using Common.Events;
-using MassTransit;
+﻿using System.Text;
+using System.Text.Json;
+using OrderService.Application.DTO;
 using OrderService.Application.Interfaces;
-using OrderService.Domain.Entities;
+using RabbitMQ.Client;
 
 namespace OrderService.Infrastructure;
 
-public class Publisher : IPublisher
+public class Publisher:IPublisher
 {
-    private readonly IBus _bus;
-
-    public Publisher(IBus bus)
+    private readonly IModel _channel;
+    private const string ExchangeName = "orderExchange";
+    private string _routingKey;
+    private readonly IBasicProperties _basicProperties;
+    public Publisher()
     {
-        _bus = bus;
+        var factory = new ConnectionFactory
+        {
+            HostName = "localhost"
+        };
+        var connection = factory.CreateConnection();
+        _channel = connection.CreateModel();
+        _basicProperties = _channel.CreateBasicProperties();
+        _basicProperties.Persistent = true;
     }
 
-    public async Task PublishOrderCreatedEvent(Order order)
+    public void PublishForLog(OrderForLogDto order)
     {
-        await Task.Run(() =>
-        {
-            _bus.Publish<IOrderCreated>(new
-            {
-                OrderId = order.Id,
-                LogMessage = $"New order added with id {order.Id}",
-                order.CreatedAt
-            });
-        });
-    }
-
-    public async Task PublishOrderUpdatedEvent(Order order)
-    {
-        await Task.Run(() =>
-        {
-            _bus.Publish<IOrderUpdated>(new
-            {
-                OrderId= order.Id,
-                LogMessage =$"Order with id {order.Id} updated.",
-                order.UpdatedAt
-            });
-        });
+        _routingKey = "order.log";
+        var message = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(order));
+        _channel.BasicPublish(exchange: ExchangeName, routingKey: _routingKey, body: message,basicProperties:_basicProperties);
     }
 }
