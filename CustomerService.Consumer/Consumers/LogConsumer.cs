@@ -34,9 +34,8 @@ public class LogConsumer :ConsumerBase<LogConsumer>
                 Channel.BasicAck(message.DeliveryTag, false);
             }
             _messageList.Clear();
-            
-            
         };
+        Channel.BasicConsume(queue: QueueName, consumer: Consumer, autoAck: false);
    
     }
 }

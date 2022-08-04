@@ -22,7 +22,7 @@ public abstract class ConsumerBase<T>
         var connection = connectionFactory.CreateConnection();
         Channel = connection.CreateModel();
         QueueName = queueName;
-        Channel.QueueBind(QueueName,exchangeName,routingKey);
+        Channel.QueueBind(queueName,exchangeName,routingKey);
         Consumer = new EventingBasicConsumer(Channel);
     }
 }

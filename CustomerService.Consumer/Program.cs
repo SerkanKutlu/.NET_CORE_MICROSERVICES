@@ -7,7 +7,7 @@ host.ConfigureServices(services =>
 {
     services.AddHostedService<Worker>();
     services.AddSingleton<LogConsumer>(sp =>
-        new LogConsumer("customerExchange", "customer.log","logQueue",sp.GetRequiredService<ILogger<LogConsumer>>()));
+        new LogConsumer("customerExchange", "*.log","logQueue",sp.GetRequiredService<ILogger<LogConsumer>>()));
 });
 
 host.ConfigureLogging(loggingBuilder =>
