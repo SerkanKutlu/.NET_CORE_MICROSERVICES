@@ -1,8 +1,10 @@
 ﻿using System.Net;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using OrderService.Application.Exceptions;
 using OrderService.Application.Models;
 
-namespace OrderServiceClean.API.Middlewares;
+namespace OrderService.Application.Middlewares;
 
 public class ExceptionMiddleware
 {

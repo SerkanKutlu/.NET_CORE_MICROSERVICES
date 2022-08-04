@@ -11,8 +11,8 @@ namespace CustomerServiceClean.API.Controllers;
 
 public class CustomersController : ControllerBase
 {
-    private readonly ICustomerRequestService _customerService;
-    public CustomersController(ICustomerRequestService customerService)
+    private readonly ICustomerService _customerService;
+    public CustomersController(ICustomerService customerService)
     {
         _customerService = customerService;
     }

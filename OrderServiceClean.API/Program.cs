@@ -6,8 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using OrderService.Application;
 using OrderService.Application.Exceptions;
+using OrderService.Application.Middlewares;
 using OrderService.Infrastructure;
-using OrderServiceClean.API.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,9 +41,7 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 #endregion
 #region AdditionalServices
 
-builder.Services.AddApplicationExtensions(builder.Configuration);
-builder.Services.AddInfrastructureExtensions(builder.Configuration);
-builder.AddSeriLogConfiguration();
+builder.RegisterComponents();
 #endregion
 #region Authentication
 
@@ -73,7 +71,7 @@ var app = builder.Build();
 // }
 app.UseSwagger();
 app.UseSwaggerUI();
-app.UseMiddleware<ExceptionMiddleware>();
+app.UseCustomMiddlewares();
 app.UseHttpsRedirection();
 
 app.UseAuthentication();

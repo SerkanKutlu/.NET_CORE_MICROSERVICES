@@ -41,7 +41,7 @@ public class ProductRepository : IProductRepository
     public async Task<PagedList<Product>> GetAll(RequestParameters requestParameters)
     {
         var products = await _mongoService.Products.
-            Search(requestParameters.SearchTerm)
+            Search(requestParameters.SearchTerm,requestParameters.SearchArea)
             .CustomSort(requestParameters.OrderBy)
             .ToListAsync();
         var pagedProducts =

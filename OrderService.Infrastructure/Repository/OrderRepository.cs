@@ -42,7 +42,7 @@ public class OrderRepository : IOrderRepository
     public async Task<PagedList<Order>> GetAll(RequestParameters requestParameters)
     {
         var orders = await _mongoService.Orders
-            .Search(requestParameters.SearchTerm)
+            .Search(requestParameters.SearchTerm,requestParameters.SearchArea)
             .CustomSort(requestParameters.OrderBy)
             .ToListAsync();
         var pagedOrders =

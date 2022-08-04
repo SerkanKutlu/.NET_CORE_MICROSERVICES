@@ -1,8 +1,8 @@
 using System.Text;
 using CustomerService.Application;
 using CustomerService.Application.Exceptions;
+using CustomerService.Application.Middlewares;
 using CustomerService.Infrastructure;
-using CustomerServiceClean.API.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -40,13 +40,10 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 });
 
 #endregion
-#region AdditionalServices
 
-builder.Services.AddApplicationServices(builder.Configuration);
-builder.Services.AddInfrastructureExtensions(builder.Configuration);
-builder.AddSeriLogConfiguration();
+builder.RegisterComponents();
 
-#endregion
+
 #region Authentication
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(JwtBearerDefaults.AuthenticationScheme,options =>
@@ -73,7 +70,9 @@ var app = builder.Build();
 // }
 app.UseSwagger();
 app.UseSwaggerUI();
-app.UseMiddleware<ExceptionMiddleware>();
+
+app.UseCustomMiddlewares();
+
 app.UseHttpsRedirection();
 
 app.UseAuthentication();

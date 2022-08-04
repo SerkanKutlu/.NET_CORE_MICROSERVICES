@@ -8,6 +8,7 @@ public class RequestParameters
     const int MaxPageSize = 50;
     private int _pageNumber;
     private int _pageSize;
+    private string _searchArea = "Address.City";
 
     public int PageNumber
     {
@@ -21,6 +22,11 @@ public class RequestParameters
     }
     public string SearchTerm { get; set; }
     public string OrderBy { get; set; }
+    public string SearchArea
+    {
+        get => _searchArea;
+        set => _searchArea = (!string.IsNullOrWhiteSpace(value)) ? value : "Address.City";
+    }
 
     public RequestParameters()
     {

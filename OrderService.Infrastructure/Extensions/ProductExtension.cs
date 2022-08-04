@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Text.RegularExpressions;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using OrderService.Domain.Entities;
 
@@ -6,54 +7,34 @@ namespace OrderService.Infrastructure.Extensions;
 
 public static class ProductExtension
 {
-     public static IFindFluent<Product,Product> Search(this IMongoCollection<Product> products, string searchTerm)
+     public static IFindFluent<Product,Product> Search(this IMongoCollection<Product> products, string searchTerm,string searchArea)
         {
-            var findOptions = new FindOptions()
-            {
-                Collation = new Collation("en", strength: CollationStrength.Secondary)
-            };
-            return string.IsNullOrWhiteSpace(searchTerm) ?
-                products.Find(p=>true,findOptions) : 
-                products.Find(p => p.Name.ToLower()
-                    .Contains(searchTerm.Trim().ToLower()),findOptions);
-            
+            if (string.IsNullOrWhiteSpace(searchTerm)) return products.Find(c => true);
+            searchArea = char.ToUpper(searchArea[0]) + searchArea.Substring(1);
+            var filter = Builders<Product>.Filter.Regex(searchArea,new BsonRegularExpression(new Regex(searchTerm,RegexOptions.IgnoreCase)));
+            return products.Find(filter);
         }
         
         
         public static IFindFluent<Product, Product> CustomSort(this IFindFluent<Product, Product> products,
             string orderBy)
         {
-            if (string.IsNullOrWhiteSpace(orderBy))
-                return products.SortBy(p => p.Name);
-            var productParams = orderBy.Trim().Split(',');
-            var propertyInfos = typeof(Product).GetProperties(BindingFlags.Public | BindingFlags.Instance);
-            var queryProp = string.Empty;
-            var direction = string.Empty;
-            foreach (var param in productParams)
+            if (string.IsNullOrWhiteSpace(orderBy)) return products;
+            var orderParameters = orderBy.Split(',');
+            var query = "{";
+            var direction = orderParameters[^1].Split(' ')[1].Contains("desc") ? "-1" : "1";
+            for (var i = 0; i < orderParameters.Length; i++)
             {
-                if (string.IsNullOrWhiteSpace(param))
+                if (i == orderParameters.Length - 1)
+                {
+                    var subParam = orderParameters[i].Split(' ')[0];
+                    subParam = char.ToUpper(subParam[0]) + subParam.Substring(1);
+                    query += $"{subParam}:{direction}}}";
                     continue;
-                var propertyFromQueryName = param.Split(" ")[0];
-                var objectProperty = propertyInfos.FirstOrDefault(pi =>
-                    pi.Name.Equals(propertyFromQueryName, StringComparison.InvariantCultureIgnoreCase));
-                if (objectProperty == null)
-                    continue;
-                direction = param.EndsWith(" desc") ? "descending" : "ascending";
-                queryProp += objectProperty.Name+",";
-                
+                }
+                var param = char.ToUpper(orderParameters[i][0]) + orderParameters[i].Substring(1);
+                query += $"{param}:{direction},";
             }
-
-            var queryPropList = queryProp.TrimEnd(',', ' ').Split(",");
-            var productQuery = "{";
-            foreach (var query in queryPropList)
-            {
-                productQuery += direction == "ascending" ? $"{query}:1," : $"{query}:-1,";
-            }
-
-            productQuery = productQuery.TrimEnd(',', ' ');
-            productQuery += "}";
-            if (string.IsNullOrWhiteSpace(productQuery))
-                return products.SortBy(o=>o.Name);
-            return products.Sort(productQuery);
+            return products.Sort(query);
         }
 }

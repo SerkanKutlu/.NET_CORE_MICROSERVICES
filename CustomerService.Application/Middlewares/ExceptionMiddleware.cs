@@ -1,9 +1,11 @@
 ﻿using System.Net;
 using CustomerService.Application.Exceptions;
 using CustomerService.Application.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 
-namespace CustomerServiceClean.API.Middlewares;
+namespace CustomerService.Application.Middlewares;
 
 public class ExceptionMiddleware
 {

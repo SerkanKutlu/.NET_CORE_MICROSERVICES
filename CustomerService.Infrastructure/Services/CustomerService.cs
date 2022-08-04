@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace CustomerService.Infrastructure.Services;
 
-public class CustomerService : ICustomerRequestService
+public class CustomerService : ICustomerService
 {
     private readonly ILogger<CustomerService> _logger;
     private readonly ICustomerRepository _customerRepository;
