@@ -19,7 +19,7 @@ public class CustomerForUpdateDto
             CreatedAt = DateTime.MinValue,
             UpdatedAt = DateTime.UtcNow,
             Id = Id,
-            Name = Name
+            Name = Name.ToLowerInvariant()
         };
     }
 }

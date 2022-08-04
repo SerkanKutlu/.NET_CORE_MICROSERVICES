@@ -20,7 +20,7 @@ public class CustomerForCreationDto
             UpdatedAt = DateTime.MinValue,
             CreatedAt = DateTime.UtcNow,
             Id = Guid.NewGuid().ToString(),
-            Name = Name
+            Name = Name.ToLowerInvariant()
         };
     }
     

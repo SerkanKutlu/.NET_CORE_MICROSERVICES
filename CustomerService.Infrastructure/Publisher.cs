@@ -20,7 +20,6 @@ public class Publisher:IPublisher
         };
         var connection = factory.CreateConnection();
         _channel = connection.CreateModel();
-        //_channel.ExchangeDeclare(ExchangeName, type: ExchangeType.Topic,durable:true);
         _basicProperties = _channel.CreateBasicProperties();
         _basicProperties.Persistent = true;
     }

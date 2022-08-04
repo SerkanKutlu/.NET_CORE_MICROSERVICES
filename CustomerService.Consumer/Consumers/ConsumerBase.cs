@@ -21,7 +21,6 @@ public abstract class ConsumerBase<T>
         };
         var connection = connectionFactory.CreateConnection();
         Channel = connection.CreateModel();
-        //Channel.ExchangeDeclare(exchangeName, type: ExchangeType.Topic,durable:true);
         QueueName = queueName;
         Channel.QueueBind(QueueName,exchangeName,routingKey);
         Consumer = new EventingBasicConsumer(Channel);

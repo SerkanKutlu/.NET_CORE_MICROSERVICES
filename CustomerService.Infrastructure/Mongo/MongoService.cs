@@ -18,9 +18,9 @@ public class MongoService : IMongoService
         SeedCustomerData.SeedData(Customers);
         //Unique Email Area
         
-        var options = new CreateIndexOptions {Unique = true};
-        var indexModel = new CreateIndexModel<Customer>("{Email:1}",options);
-        Customers.Indexes.CreateOne(indexModel);
+        // var options = new CreateIndexOptions {Unique = true};
+        // var indexModel = new CreateIndexModel<Customer>("{Email:1}",options);
+        // Customers.Indexes.CreateOne(indexModel);
     }
    
 }

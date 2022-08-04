@@ -42,7 +42,7 @@ public class CustomerRepository : ICustomerRepository
     public async Task<PagedList<Customer>> GetAll(RequestParameters requestParameters)
     {
         var customers = await _mongoService.Customers
-            .Search(requestParameters.SearchTerm)
+            .Search(requestParameters.SearchTerm,requestParameters.SearchArea)
             .CustomSort(requestParameters.OrderBy).ToListAsync();
         var returnCustomers = PagedList<Customer>.ToPagedList(customers,requestParameters.PageNumber,requestParameters.PageSize);
         if (returnCustomers.Any())
