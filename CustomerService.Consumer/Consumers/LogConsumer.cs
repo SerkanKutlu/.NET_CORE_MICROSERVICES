@@ -26,6 +26,7 @@ public class LogConsumer :ConsumerBase
 
         Consumer.Received += (model,ea) =>
         {
+            Console.WriteLine("HERE");
             _messageList.Add(ea);
             var x = model;
             _bulkSize++;

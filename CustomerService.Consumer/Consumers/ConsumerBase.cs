@@ -14,14 +14,12 @@ public abstract class ConsumerBase
     protected ConsumerBase(string exchangeName, string routingKey,string queueName, IConsumerService consumerService)
     {
         ConsumerService = consumerService;
-        var connectionFactory = new ConnectionFactory
-        {
-            HostName = "localhost"
-        };
+        var connectionFactory = new ConnectionFactory(){HostName = "localhost"};
+        connectionFactory.Port = 5673;
         var connection = connectionFactory.CreateConnection();
         Channel = connection.CreateModel();
-        QueueName = queueName;
-        //Channel.QueueBind(queueName,exchangeName,routingKey);
+        QueueName = Channel.QueueDeclare(queueName, durable: true, autoDelete: false, exclusive: false).QueueName;
+        Channel.QueueBind(queueName,exchangeName,routingKey);
         Consumer = new EventingBasicConsumer(Channel);
     }
     

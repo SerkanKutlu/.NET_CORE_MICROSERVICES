@@ -9,15 +9,13 @@ namespace CustomerService.Infrastructure;
 public class Publisher:IPublisher
 {
     private readonly IModel _channel;
-    private const string ExchangeName = "customerExchange";
+    private const string ExchangeName = "customer.log";
     private string _routingKey;
     private readonly IBasicProperties _basicProperties;
     public Publisher()
     {
-        var factory = new ConnectionFactory
-        {
-            HostName = "localhost"
-        };
+        var factory = new ConnectionFactory() {HostName = "localhost"};
+        factory.Port = 5672;
         var connection = factory.CreateConnection();
         _channel = connection.CreateModel();
         _basicProperties = _channel.CreateBasicProperties();
