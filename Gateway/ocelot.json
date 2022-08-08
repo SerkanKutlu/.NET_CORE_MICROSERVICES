@@ -1,0 +1,124 @@
+﻿{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/Customers",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "8001"
+        }
+      ],
+      "UpstreamHttpMethod": ["GET","POST","PUT"],
+      "UpstreamPathTemplate": "/Customers"
+    },
+    {
+      "DownstreamPathTemplate": "/api/Customers/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "8001"
+        }
+      ],
+      "UpstreamHttpMethod": ["GET","DELETE"],
+      "UpstreamPathTemplate": "/Customers/{id}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/Customers/validate/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "8001"
+        }
+      ],
+      "UpstreamHttpMethod": ["GET"],
+      "UpstreamPathTemplate": "/Customers/validate/{id}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/Order",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "8003"
+        }
+      ],
+      "UpstreamHttpMethod": ["GET","POST","PUT"],
+      "UpstreamPathTemplate": "/Order"
+    },
+    {
+      "DownstreamPathTemplate": "/api/Order/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "8003"
+        }
+      ],
+      "UpstreamHttpMethod": ["GET","DELETE"],
+      "UpstreamPathTemplate": "/Order/{id}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/Order/customer/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "8003"
+        }
+      ],
+      "UpstreamHttpMethod": ["GET","DELETE"],
+      "UpstreamPathTemplate": "/Order/customer/{id}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/Product",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "8003"
+        }
+      ],
+      "UpstreamHttpMethod": ["GET","POST","PUT","DELETE"],
+      "UpstreamPathTemplate": "/Product"
+    },
+    {
+      "DownstreamPathTemplate": "/api/Product/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "8003"
+        }
+      ],
+      "UpstreamHttpMethod": ["GET","DELETE"],
+      "UpstreamPathTemplate": "/Product/{id}"
+    },
+    {
+      "DownstreamPathTemplate": "/api/User",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "7181"
+        }
+      ],
+      "UpstreamHttpMethod": ["GET"],
+      "UpstreamPathTemplate": "/user"
+    },
+    {
+      "DownstreamPathTemplate": "/api/User/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "7181"
+        }
+      ],
+      "UpstreamHttpMethod": ["POST","PUT"],
+      "UpstreamPathTemplate": "/user/{everything}"
+    }
+  ]
+}
