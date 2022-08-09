@@ -1,33 +1,27 @@
-﻿using System.Text;
-using System.Text.Json;
+﻿using Confluent.Kafka;
 using OrderService.Application.DTO;
 using OrderService.Application.Interfaces;
-using RabbitMQ.Client;
 
 namespace OrderService.Infrastructure;
 
 public class Publisher:IPublisher
 {
-    private readonly IModel _channel;
-    private const string ExchangeName = "orderExchange";
-    private string _routingKey;
-    private readonly IBasicProperties _basicProperties;
+    private readonly IProducer<Null, OrderForLogDto> _producer;
     public Publisher()
     {
-        var factory = new ConnectionFactory
+        var config = new ProducerConfig
         {
-            HostName = "localhost"
+            BootstrapServers = "localhost:9092",
         };
-        var connection = factory.CreateConnection();
-        _channel = connection.CreateModel();
-        _basicProperties = _channel.CreateBasicProperties();
-        _basicProperties.Persistent = true;
+        _producer = new ProducerBuilder<Null, OrderForLogDto>(config).SetValueSerializer(new OrderForLogDto()).Build();
     }
 
-    public void PublishForLog(OrderForLogDto order)
+    public async Task PublishForLog(OrderForLogDto customer)
     {
-        _routingKey = "order.log";
-        var message = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(order));
-        _channel.BasicPublish(exchange: ExchangeName, routingKey: _routingKey, body: message,basicProperties:_basicProperties);
+        var message = new Message<Null, OrderForLogDto>
+        {
+            Value = customer
+        };
+        await _producer.ProduceAsync("orderLogging", message);
     }
 }

@@ -18,8 +18,7 @@ var host = Host.CreateDefaultBuilder(args)
         services.Configure<MongoSettings>(configuration.GetSection(nameof(MongoSettings)));
         services.AddSingleton<IMongoSettings>(provider=>provider.GetRequiredService<IOptions<MongoSettings>>().Value);
         services.AddSingleton<IMongoService,MongoService>();
-        services.AddSingleton(sp =>
-            new LogConsumer("orderExchange", "*.log","OrderLogQueue",sp.GetRequiredService<IConsumerService>()));
+        services.AddSingleton<KafkaConsumer>();
     });
 
 host.ConfigureLogging(loggingBuilder =>

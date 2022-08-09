@@ -6,5 +6,5 @@ namespace OrderService.Application.Interfaces;
 
 public interface IPublisher
 {
-    public void PublishForLog(OrderForLogDto order);
+    public Task PublishForLog(OrderForLogDto customer);
 }

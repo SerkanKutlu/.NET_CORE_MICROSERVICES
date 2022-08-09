@@ -1,9 +1,12 @@
-﻿using OrderService.Domain.Entities;
+﻿using System.Text;
+using System.Text.Json;
+using Confluent.Kafka;
+using OrderService.Domain.Entities;
 using OrderService.Domain.ValueObjects;
 
 namespace OrderService.Application.DTO;
 
-public class OrderForLogDto
+public class OrderForLogDto : ISerializer<OrderForLogDto>, IDeserializer<OrderForLogDto>
 {
     public string Id { get; set; }
     public string CustomerId { get; set; }
@@ -15,6 +18,18 @@ public class OrderForLogDto
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
     public string Action { get; set; }
+    
+    public byte[] Serialize(OrderForLogDto data, SerializationContext context)
+    {
+        var serialized = JsonSerializer.Serialize(data);
+        return Encoding.UTF8.GetBytes(serialized);
+    }
+
+    public OrderForLogDto Deserialize(ReadOnlySpan<byte> data, bool isNull, SerializationContext context)
+    {
+        var stringDto = Encoding.UTF8.GetString(data);
+        return JsonSerializer.Deserialize<OrderForLogDto>(stringDto);
+    }
     
     public void FillWithOrder(Order order, string action)
     { 
