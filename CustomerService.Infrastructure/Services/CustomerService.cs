@@ -51,7 +51,7 @@ public class CustomerService : ICustomerService
             $"https://{context.Request.Headers["Host"]}/api/Customers/{customer.Id}");
         var customerForLog = new CustomerForLogDto();
         customerForLog.FillWithCustomer(customer,"Created");
-        _publisher.PublishForLog(customerForLog);
+        await _publisher.PublishForLog(customerForLog);
         return customer.Id;
     }
 
@@ -62,7 +62,7 @@ public class CustomerService : ICustomerService
         await _customerRepository.UpdateAsync(customer);
         var customerForLog = new CustomerForLogDto();
         customerForLog.FillWithCustomer(customer,"Updated");
-        _publisher.PublishForLog(customerForLog);
+        await _publisher.PublishForLog(customerForLog);
         return customer;
     }
 

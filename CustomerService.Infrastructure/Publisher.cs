@@ -12,7 +12,6 @@ public class Publisher:IPublisher
         var config = new ProducerConfig
         {
             BootstrapServers = "localhost:9092",
-            ClientId = Dns.GetHostName()
         };
         _producer = new ProducerBuilder<Null, CustomerForLogDto>(config).SetValueSerializer(new CustomerForLogDto()).Build();
     }
@@ -23,6 +22,6 @@ public class Publisher:IPublisher
         {
             Value = customer
         };
-        await _producer.ProduceAsync("topic1", message);
+        await _producer.ProduceAsync("loggingTopic", message);
     }
 }
