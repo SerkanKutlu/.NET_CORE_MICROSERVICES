@@ -17,9 +17,8 @@ host.ConfigureServices(services =>
     services.Configure<MongoSettings>(configuration.GetSection(nameof(MongoSettings)));
     services.AddSingleton<IMongoSettings>(provider=>provider.GetRequiredService<IOptions<MongoSettings>>().Value);
     services.AddSingleton<IMongoService,MongoService>();
-    services.AddSingleton(sp =>
-        new LogConsumer("customer.log", "*.log","queue.log",sp.GetRequiredService<IConsumerService>()));
-    
+    services.AddSingleton<KafkaConsumer>();
+    services.AddSingleton<KafkaConsumer2>();
 });
 
 host.ConfigureLogging(loggingBuilder =>

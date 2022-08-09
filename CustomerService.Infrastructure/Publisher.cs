@@ -1,31 +1,28 @@
-﻿using System.Text;
-using System.Text.Json;
+﻿using System.Net;
+using Confluent.Kafka;
 using CustomerService.Application.Dto;
-using CustomerService.Application.Interfaces;   
-using RabbitMQ.Client;
-
+using CustomerService.Application.Interfaces;
 namespace CustomerService.Infrastructure;
 
 public class Publisher:IPublisher
 {
-    private readonly IModel _channel;
-    private const string ExchangeName = "customer.log";
-    private string _routingKey;
-    private readonly IBasicProperties _basicProperties;
+    private readonly IProducer<Null, CustomerForLogDto> _producer;
     public Publisher()
     {
-        var factory = new ConnectionFactory() {HostName = "localhost"};
-        factory.Port = 5672;
-        var connection = factory.CreateConnection();
-        _channel = connection.CreateModel();
-        _basicProperties = _channel.CreateBasicProperties();
-        _basicProperties.Persistent = true;
+        var config = new ProducerConfig
+        {
+            BootstrapServers = "localhost:9092",
+            ClientId = Dns.GetHostName()
+        };
+        _producer = new ProducerBuilder<Null, CustomerForLogDto>(config).SetValueSerializer(new CustomerForLogDto()).Build();
     }
 
-    public void PublishForLog(CustomerForLogDto customer)
+    public async Task PublishForLog(CustomerForLogDto customer)
     {
-        _routingKey = "customer.log";
-        var message = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(customer));
-        _channel.BasicPublish(exchange: ExchangeName, routingKey: _routingKey, body: message,basicProperties:_basicProperties);
+        var message = new Message<Null, CustomerForLogDto>
+        {
+            Value = customer
+        };
+        await _producer.ProduceAsync("topic1", message);
     }
 }
