@@ -5,5 +5,5 @@ namespace Core.Interfaces;
 
 public interface IMongoService
 {
-    IMongoCollection<Document> Documents { get; set; }
+    IMongoCollection<DocumentEntity> Documents { get; set; }
 }

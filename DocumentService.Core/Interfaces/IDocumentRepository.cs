@@ -1,11 +1,12 @@
 ﻿using Core.Entity;
+using Core.Model;
 
 namespace Core.Interfaces;
 
 public interface IDocumentRepository
 {
-    Task CreateAsync(Document document);
+    Task CreateAsync(DocumentEntity document);
     Task DeleteAsync(string id);
-    Task<IEnumerable<Document>> GetAllAsync();
-    Task<Document> GetByIdAsync(string id);
+    Task<List<PathReturnModel>> GetAllPathsAsync();
+    Task<PathReturnModel> GetPathByIdAsync(string id);
 }
