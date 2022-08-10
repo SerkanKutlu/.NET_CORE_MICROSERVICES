@@ -29,6 +29,7 @@ public class TokenHandler : ITokenHandler
             new Claim(ClaimTypes.Surname, user.Surname),
             new Claim(ClaimTypes.Email, user.Email),
             new Claim(ClaimTypes.Role, user.Role),
+            new Claim(ClaimTypes.PrimarySid, user.Id),
         };
         var jwtToken = new JwtSecurityToken(
             _configuration["Token:Issuer"],
