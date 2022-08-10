@@ -33,6 +33,7 @@ public static class Helper
                 control = true;
             }
         }
+
         if (!control)
             throw new InvalidMimeTypeException(mimeType);
     }

@@ -36,7 +36,7 @@ public class DocumentController : ControllerBase
     //[Authorize(Roles = "Admin,Customer")]
     public async Task<IActionResult> Upload()
     {
-        var documentId =await _documentService.Upload(HttpContext);
-        return Ok(documentId);
+        var result =await _documentService.Upload(HttpContext);
+        return Ok(result);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using Core;
+using Core.Dto;
 using Core.Entity;
 using Core.Exceptions;
 using Core.Interfaces;
@@ -24,7 +25,7 @@ public class DocumentService : IDocumentService
         
     }
 
-    public async Task<string> Upload(HttpContext httpContext)
+    public async Task<UploadResultDto> Upload(HttpContext httpContext)
     {
         //Getting user informations
         var userClaims = ((ClaimsIdentity)httpContext.User.Identity)?.Claims.ToList();
@@ -33,32 +34,51 @@ public class DocumentService : IDocumentService
         
         //Getting file(s)
         var formCollection = await httpContext.Request.ReadFormAsync();
-        var file = formCollection.Files.First();
-        if (file.Length > 0)
+        var files = formCollection.Files;
+        var createdDocuments = new Dictionary<string, string>();
+        
+ 
+ 
+        //Check if any unsupported types exist before saving.
+        foreach (var file in files)
+            file.FileName.GetMimeType().CheckSupportedType();
+        
+        //Upload Files
+        foreach (var file in files)
         {
-            var savingFolder = "Documents";
-            var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), $"{savingFolder}\\{file.FileName}");
-            var mimeType = pathToSave.GetMimeType();
-            mimeType.CheckSupportedType();
-            var document = new Document
+            if (file.Length > 0)
             {
-                FileName = $"{file.FileName}_uploadedBy_{role}",
-                Id = Guid.NewGuid().ToString(),
-                MimeType = mimeType,
-                OriginalFileName = file.FileName,
-                Path = pathToSave,
-                UploadedAt = DateTime.Now,
-                UserId = userId
-            };
-            await using (var stream = new FileStream(pathToSave, FileMode.Create))
-            {
-                await file.CopyToAsync(stream);
+                var savingFolder = "Documents";
+                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), $"{savingFolder}\\{file.FileName}");
+                var mimeType = pathToSave.GetMimeType();
+                mimeType.CheckSupportedType();
+                var document = new Document
+                {
+                    FileName = $"{file.FileName}_uploadedBy_{role}",
+                    Id = Guid.NewGuid().ToString(),
+                    MimeType = mimeType,
+                    OriginalFileName = file.FileName,
+                    Path = pathToSave,
+                    UploadedAt = DateTime.Now,
+                    UserId = userId
+                };
+                await using (var stream = new FileStream(pathToSave, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+
+                await _documentRepository.CreateAsync(document);
+                createdDocuments.Add(file.FileName,document.Id);
             }
-
-            await _documentRepository.CreateAsync(document);
-            return document.Id;
         }
-
-        throw new DocumentNotSelectedException();
+        if (!createdDocuments.Any())
+        {
+            throw new DocumentNotSelectedException();
+        }
+        return new UploadResultDto
+        {
+            UploadedDocuments = createdDocuments
+        };
+        
     }
 }

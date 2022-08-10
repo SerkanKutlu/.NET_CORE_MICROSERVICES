@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Core.Dto;
+using Microsoft.AspNetCore.Http;
 
 namespace Core.Interfaces;
 
 public interface IDocumentService
 {
-    Task<string> Upload(HttpContext httpContext);
+    Task<UploadResultDto> Upload(HttpContext httpContext);
     Task Delete(string docId);
     Task Download();
 }
