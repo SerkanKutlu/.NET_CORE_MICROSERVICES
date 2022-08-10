@@ -43,6 +43,8 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gateway", "Gateway\Gateway.csproj", "{13551411-4B71-4D70-9583-8FAE6AF9CA98}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocumentService", "DocumentService\DocumentService.csproj", "{BF4CE76E-57AE-4791-B967-3C2CD62AD231}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -109,6 +111,10 @@ Global
 		{13551411-4B71-4D70-9583-8FAE6AF9CA98}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{13551411-4B71-4D70-9583-8FAE6AF9CA98}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{13551411-4B71-4D70-9583-8FAE6AF9CA98}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF4CE76E-57AE-4791-B967-3C2CD62AD231}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF4CE76E-57AE-4791-B967-3C2CD62AD231}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF4CE76E-57AE-4791-B967-3C2CD62AD231}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF4CE76E-57AE-4791-B967-3C2CD62AD231}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -132,6 +138,7 @@ Global
 		{A250C33D-8CFC-4913-8925-1723A22EBBFE} = {FAF7A828-933E-4DE9-BBA7-3DB2BF8E4D13}
 		{7DF1C7B0-BFFB-4E18-81F3-F7DCA0218015} = {12CA5E52-B04C-4FB4-B83F-294D49187747}
 		{13551411-4B71-4D70-9583-8FAE6AF9CA98} = {39AD090E-29BF-4D99-8D6D-71F4F758620A}
+		{BF4CE76E-57AE-4791-B967-3C2CD62AD231} = {C234BACE-7383-456B-8AE7-747AB5E83409}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AA6A2F4E-F6BE-40A2-90B0-589E190ED2CB}
