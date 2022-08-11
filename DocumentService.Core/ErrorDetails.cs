@@ -1,20 +1,21 @@
 ﻿using System.Text.Json;
 
-namespace Core;
-
-public class ErrorDetails
+namespace Core
 {
-    public string Message { get; set; }
-    public int StatusCode { get; set; }
-
-    public ErrorDetails(string message, int code)
+    public class ErrorDetails
     {
-        Message = message;
-        StatusCode = code;
-    }
+        public string Message { get; set; }
+        public int StatusCode { get; set; }
 
-    public override string ToString()
-    {
-        return JsonSerializer.Serialize(this);
+        public ErrorDetails(string message, int code)
+        {
+            Message = message;
+            StatusCode = code;
+        }
+
+        public override string ToString()
+        {
+            return JsonSerializer.Serialize(this);
+        }
     }
 }

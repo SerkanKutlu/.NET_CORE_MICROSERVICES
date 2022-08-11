@@ -1,8 +1,9 @@
-﻿namespace Core.Interfaces;
-
-public interface IMongoSettings
+﻿namespace Core.Interfaces
 {
-    public string ConnectionString { get; set; }
-    public string DatabaseName { get; set; }
-    public string CollectionName { get; set; }
+    public interface IMongoSettings
+    {
+        public string ConnectionString { get; set; }
+        public string DatabaseName { get; set; }
+        public string CollectionName { get; set; }
+    }
 }

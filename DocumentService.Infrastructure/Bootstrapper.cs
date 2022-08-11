@@ -1,4 +1,5 @@
-﻿using Core.Interfaces;
+﻿using Core.Helpers;
+using Core.Interfaces;
 using Core.Middlewares;
 using DocumentService.Infrastructure.Mongo;
 using DocumentService.Infrastructure.Repository;
@@ -16,6 +17,7 @@ public static class Bootstrapper
         AddRepositories(services);
         AddConfigurations(services,configuration);
         AddServices(services);
+        AddHelpers(services);
         return services;
     }
     
@@ -38,5 +40,11 @@ public static class Bootstrapper
     {
         services.AddSingleton<IMongoService, MongoService>();
         services.AddScoped<IDocumentService, Services.DocumentService>();
+    }
+
+    private static void AddHelpers(IServiceCollection services)
+    {
+        services.AddScoped<IAuthHelper, AuthHelper>();
+        services.AddScoped<IFileHelper, FileHelper>();
     }
 }

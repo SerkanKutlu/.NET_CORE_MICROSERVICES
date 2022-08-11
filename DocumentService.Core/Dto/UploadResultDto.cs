@@ -1,6 +1,7 @@
-﻿namespace Core.Dto;
-
-public class UploadResultDto
+﻿namespace Core.Dto
 {
-    public Dictionary<string, string> UploadedDocuments { get; set; } = new();
+    public class UploadResultDto
+    {
+        public Dictionary<string, string> UploadedDocuments { get; set; } = new();
+    }
 }

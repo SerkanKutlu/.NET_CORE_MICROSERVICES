@@ -1,18 +1,19 @@
 ﻿using System.Text.Json;
 
-namespace Core.Exceptions;
-
-public abstract class CustomExceptionBase:Exception
+namespace Core.Exceptions
 {
-    public ErrorDetails ErrorDetails { get; set; }
-
-    protected CustomExceptionBase(ErrorDetails errorDetails)
+    public abstract class CustomExceptionBase:Exception
     {
-        ErrorDetails = errorDetails;
-    }
+        public ErrorDetails ErrorDetails { get; set; }
 
-    public override string ToString()
-    {
-        return JsonSerializer.Serialize(ErrorDetails);
+        protected CustomExceptionBase(ErrorDetails errorDetails)
+        {
+            ErrorDetails = errorDetails;
+        }
+
+        public override string ToString()
+        {
+            return JsonSerializer.Serialize(ErrorDetails);
+        }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.IO.Compression;
-using Core.Interfaces;
+﻿using Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,8 +14,15 @@ public class DocumentController : ControllerBase
         _documentService = documentService;
     }
 
+    [HttpGet("Show")]
+    [Authorize(Roles="Admin,User,Viewer")]
+    public async Task<IActionResult> ShowAll()
+    {
+        var result =await _documentService.ShowAll(HttpContext);
+        return Ok(result);
+    }
 
-    [HttpGet("download")]
+    [HttpGet("Download/All")]
     [Authorize(Roles = "Admin,Viewer,User")]
     public async Task<FileContentResult> Download()
     {
@@ -25,27 +31,26 @@ public class DocumentController : ControllerBase
 
     }
 
-    [Authorize(Roles = "Admin,User")]
-    [HttpGet("download/{id}")]
-    public async Task<FileContentResult> DownloadById(string id)
+    [Authorize(Roles = "Admin,User,Viewer")]
+    [HttpGet("Download")]
+    public async Task<FileContentResult> DownloadById([FromQuery]string id)
     {
         var result =await _documentService.DownloadById(id,HttpContext);
         return result;
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete]
     [Authorize(Roles = "Admin,User")]
-    public async Task<IActionResult> Delete(string id)
+    public async Task<IActionResult> Delete([FromQuery]string id)
     {
         await _documentService.Delete(id, HttpContext);
         return Ok();
     }
     
-    
-    
 
-    [HttpPost("upload")]
-    //[Authorize(Roles = "Admin,Customer")]
+    [HttpPost("Upload")]
+    [Authorize(Roles = "Admin,User")]
+    [DisableRequestSizeLimit]
     public async Task<IActionResult> Upload()
     {
         var result =await _documentService.Upload(HttpContext);

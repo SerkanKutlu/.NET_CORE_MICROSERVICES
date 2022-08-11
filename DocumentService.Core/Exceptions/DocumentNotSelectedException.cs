@@ -1,8 +1,9 @@
-﻿namespace Core.Exceptions;
-
-public class DocumentNotSelectedException:CustomExceptionBase
+﻿namespace Core.Exceptions
 {
-    public DocumentNotSelectedException( ) : base(new ErrorDetails("Select a file to upload", 400))
+    public class DocumentNotSelectedException:CustomExceptionBase
     {
+        public DocumentNotSelectedException( ) : base(new ErrorDetails("Select a file to upload", 400))
+        {
+        }
     }
 }

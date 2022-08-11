@@ -35,26 +35,48 @@ public class DocumentRepository : IDocumentRepository
             .Projection
             .Include(d => d.Path)
             .Include(d => d.FileName)
-            .Include(d=>d.UserId);
-        var documents =await _documents.Find(d => true)
+            .Include(d => d.UserId);
+        var documents = await _documents.Find(d => true)
             .Project<PathReturnModel>(projection).ToListAsync();
-        if(!documents.Any())
+        if (!documents.Any())
             throw new DocumentNotFoundException();
         return documents;
     }
-    
+
 
     public async Task<PathReturnModel> GetPathByIdAsync(string id)
     {
         var projection = Builders<DocumentEntity>
             .Projection
             .Include(d => d.Path)
-            .Include(d=>d.FileName)
-            .Include(d=>d.UserId);
-        var document =await _documents.Find(d => d.Id ==id)
+            .Include(d => d.FileName)
+            .Include(d => d.UserId);
+        var document = await _documents.Find(d => d.Id == id)
             .Project<PathReturnModel>(projection).FirstOrDefaultAsync();
         if (document == null)
             throw new DocumentNotFoundException();
         return document;
+    }
+
+    public async Task<List<DocumentEntity>> GetEntities()
+    {
+        var documents = await _documents.Find(d => true).ToListAsync();
+        if (!documents.Any())
+        {
+            throw new DocumentNotFoundException();
+        }
+
+        return documents;
+    }
+
+    public async Task<List<DocumentEntity>> GetEntities(string userId)
+    {
+        var documents = await _documents.Find(d => d.UserId == userId).ToListAsync();
+        if (!documents.Any())
+        {
+            throw new DocumentNotFoundException();
+        }
+
+        return documents;
     }
 }
