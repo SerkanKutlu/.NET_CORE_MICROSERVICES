@@ -24,7 +24,7 @@ public class DocumentController : ControllerBase
 
     [HttpGet("Download/All")]
     [Authorize(Roles = "Admin,Viewer,User")]
-    public async Task<FileContentResult> Download()
+    public async Task<FileContentResult> DownloadAll()
     {
         var result = await _documentService.DownloadAllFiles(HttpContext);
         return result;
@@ -33,7 +33,7 @@ public class DocumentController : ControllerBase
 
     [Authorize(Roles = "Admin,User,Viewer")]
     [HttpGet("Download")]
-    public async Task<FileContentResult> DownloadById([FromQuery]string id)
+    public async Task<IActionResult> DownloadById([FromQuery]string id)
     {
         var result =await _documentService.DownloadById(id,HttpContext);
         return result;
