@@ -6,8 +6,6 @@ namespace Core.Helpers;
 
 public class AuthHelper:IAuthHelper
 {
-
-
     public bool IsAuthenticated(HttpContext httpContext)
     {
         var userClaims = ((ClaimsIdentity)httpContext.User.Identity)?.Claims.ToList();

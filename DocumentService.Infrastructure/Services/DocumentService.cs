@@ -23,23 +23,24 @@ public class DocumentService : IDocumentService
     public async Task<FileContentResult> DownloadAllFiles(HttpContext httpContext)
     { 
         var documents = await _documentRepository.GetAllPathsAsync();
-        await using var memoryStream = new MemoryStream();
-        using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Update))
+        await using (var memoryStream = new MemoryStream())
         {
-            foreach (var document in documents)
+            using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Update))
             {
-                if(!(_authHelper.IsAuthenticated(httpContext,document.UserId) || _authHelper.IsViewer(httpContext)))
-                    continue;
-                archive.CreateEntryFromFile(document.Path, document.FileName);
+                foreach (var document in documents)
+                {
+                    if(!(_authHelper.IsAuthenticated(httpContext,document.UserId) || _authHelper.IsViewer(httpContext)))
+                        continue;
+                    archive.CreateEntryFromFile(document.Path, document.FileName);
+                }
+                if(archive.Entries.Count==0)
+                    throw new DocumentNotFoundException();
             }
-            if(archive.Entries.Count==0)
-                throw new DocumentNotFoundException();
-              
+            return new FileContentResult(memoryStream.ToArray(), "application/zip")
+            {
+                FileDownloadName = "docs.zip"
+            };
         }
-        return new FileContentResult(memoryStream.ToArray(), "application/zip")
-        {
-            FileDownloadName = "docs.zip"
-        };
     }
     
     public async Task<FileContentResult> DownloadById(string id,HttpContext httpContext)

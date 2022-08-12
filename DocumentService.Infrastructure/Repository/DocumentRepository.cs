@@ -1,4 +1,5 @@
-﻿using Core.Entity;
+﻿using System.Linq.Expressions;
+using Core.Entity;
 using Core.Exceptions;
 using Core.Interfaces;
 using Core.Model;
@@ -9,6 +10,7 @@ namespace DocumentService.Infrastructure.Repository;
 public class DocumentRepository : IDocumentRepository
 {
     private readonly IMongoCollection<DocumentEntity> _documents;
+    
 
     public DocumentRepository(IMongoService mongoService)
     {
@@ -19,6 +21,9 @@ public class DocumentRepository : IDocumentRepository
     {
         await _documents.InsertOneAsync(document);
     }
+    
+    
+
 
     public async Task DeleteAsync(string id)
     {

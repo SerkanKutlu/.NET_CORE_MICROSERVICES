@@ -51,6 +51,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocumentService.Core", "Doc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocumentService.Infrastructure", "DocumentService.Infrastructure\DocumentService.Infrastructure.csproj", "{7431E08E-6419-4486-A43E-194C111A95F6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenericMongo", "GenericMongo\GenericMongo.csproj", "{7142BA7C-E048-45D3-B40B-A6EF4A6800C7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -129,6 +131,10 @@ Global
 		{7431E08E-6419-4486-A43E-194C111A95F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7431E08E-6419-4486-A43E-194C111A95F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7431E08E-6419-4486-A43E-194C111A95F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7142BA7C-E048-45D3-B40B-A6EF4A6800C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7142BA7C-E048-45D3-B40B-A6EF4A6800C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7142BA7C-E048-45D3-B40B-A6EF4A6800C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7142BA7C-E048-45D3-B40B-A6EF4A6800C7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -156,6 +162,7 @@ Global
 		{BF4CE76E-57AE-4791-B967-3C2CD62AD231} = {46F312F4-558B-4B36-8E22-74211FE5CBE2}
 		{DBA44094-8D45-4576-B5EB-29999F83905D} = {46F312F4-558B-4B36-8E22-74211FE5CBE2}
 		{7431E08E-6419-4486-A43E-194C111A95F6} = {46F312F4-558B-4B36-8E22-74211FE5CBE2}
+		{7142BA7C-E048-45D3-B40B-A6EF4A6800C7} = {C234BACE-7383-456B-8AE7-747AB5E83409}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AA6A2F4E-F6BE-40A2-90B0-589E190ED2CB}

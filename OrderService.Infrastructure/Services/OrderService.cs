@@ -58,7 +58,7 @@ public class OrderService:IOrderService
         _logger.LogInformation($"New order added with id {order.Id}");
         var orderForLogDto = new OrderForLogDto();
         orderForLogDto.FillWithOrder(order,"Created");
-        _publisher.PublishForLog(orderForLogDto);
+        await _publisher.PublishForLog(orderForLogDto);
         return order.Id;
     }
 
@@ -71,7 +71,7 @@ public class OrderService:IOrderService
         _logger.LogInformation($"Order with id {order.Id} updated.");
         var orderForLogDto = new OrderForLogDto();
         orderForLogDto.FillWithOrder(order,"Updated");
-        _publisher.PublishForLog(orderForLogDto);
+        await _publisher.PublishForLog(orderForLogDto);
         return order;
     }
 
