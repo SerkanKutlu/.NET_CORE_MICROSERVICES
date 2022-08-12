@@ -1,15 +1,12 @@
 ﻿using Core.Entity;
 using Core.Model;
+using GenericMongo.Interfaces;
 
 namespace Core.Interfaces
 {
-    public interface IDocumentRepository
+    public interface IDocumentRepository : IRepository<DocumentEntity>
     {
-        Task CreateAsync(DocumentEntity document);
-        Task DeleteAsync(string id);
         Task<List<PathReturnModel>> GetAllPathsAsync();
         Task<PathReturnModel> GetPathByIdAsync(string id);
-        Task<List<DocumentEntity>> GetEntities();
-        Task<List<DocumentEntity>> GetEntities(string userId);
     }
 }

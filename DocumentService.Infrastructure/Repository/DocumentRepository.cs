@@ -1,39 +1,25 @@
 ﻿using System.Linq.Expressions;
+using Aspose.Words;
 using Core.Entity;
 using Core.Exceptions;
 using Core.Interfaces;
 using Core.Model;
+using GenericMongo;
+using GenericMongo.Bases;
+using GenericMongo.Interfaces;
 using MongoDB.Driver;
 
 namespace DocumentService.Infrastructure.Repository;
 
-public class DocumentRepository : IDocumentRepository
+public class DocumentRepository : RepositoryBase<DocumentEntity>, IDocumentRepository
 {
     private readonly IMongoCollection<DocumentEntity> _documents;
-    
 
-    public DocumentRepository(IMongoService mongoService)
+    public DocumentRepository(IMongoService<DocumentEntity> mongoService) : base(mongoService)
     {
-        _documents = mongoService.Documents;
-    }
-
-    public async Task CreateAsync(DocumentEntity document)
-    {
-        await _documents.InsertOneAsync(document);
+        _documents = mongoService.Collection;
     }
     
-    
-
-
-    public async Task DeleteAsync(string id)
-    {
-        var result = await _documents.DeleteOneAsync(d => d.Id == id);
-        if (result.DeletedCount < 0)
-        {
-            throw new DocumentNotFoundException();
-        }
-    }
-
     public async Task<List<PathReturnModel>> GetAllPathsAsync()
     {
         var projection = Builders<DocumentEntity>
@@ -62,26 +48,5 @@ public class DocumentRepository : IDocumentRepository
             throw new DocumentNotFoundException();
         return document;
     }
-
-    public async Task<List<DocumentEntity>> GetEntities()
-    {
-        var documents = await _documents.Find(d => true).ToListAsync();
-        if (!documents.Any())
-        {
-            throw new DocumentNotFoundException();
-        }
-
-        return documents;
-    }
-
-    public async Task<List<DocumentEntity>> GetEntities(string userId)
-    {
-        var documents = await _documents.Find(d => d.UserId == userId).ToListAsync();
-        if (!documents.Any())
-        {
-            throw new DocumentNotFoundException();
-        }
-
-        return documents;
-    }
+    
 }

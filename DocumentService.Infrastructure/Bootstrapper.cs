@@ -1,12 +1,12 @@
-﻿using Core.Helpers;
+﻿using Core.Entity;
+using Core.Helpers;
 using Core.Interfaces;
 using Core.Middlewares;
-using DocumentService.Infrastructure.Mongo;
 using DocumentService.Infrastructure.Repository;
+using GenericMongo;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 
 namespace DocumentService.Infrastructure;
 
@@ -14,8 +14,7 @@ public static class Bootstrapper
 {
     public static IServiceCollection RegisterComponents(this IServiceCollection services, IConfiguration configuration)
     {
-        AddRepositories(services);
-        AddConfigurations(services,configuration);
+        AddRepositories(services,configuration);
         AddServices(services);
         AddHelpers(services);
         return services;
@@ -27,18 +26,18 @@ public static class Bootstrapper
         return app;
     }
 
-    private static void AddRepositories(IServiceCollection services)
+    private static void AddRepositories(IServiceCollection services,IConfiguration configuration)
     {
+        services.AddGenericMongo<DocumentEntity>(settings =>
+        {
+            settings.CollectionName = configuration.GetSection("MongoSettings")["CollectionName"];
+            settings.ConnectionString = configuration.GetSection("MongoSettings")["ConnectionString"];
+            settings.DatabaseName = configuration.GetSection("MongoSettings")["DatabaseName"];
+        });
         services.AddScoped<IDocumentRepository, DocumentRepository>();
-    }
-    private static void AddConfigurations(IServiceCollection services,IConfiguration configuration)
-    {
-      services.Configure<MongoSettings>(configuration.GetSection(nameof(MongoSettings)));
-      services.AddSingleton<IMongoSettings>(provider=>provider.GetRequiredService<IOptions<MongoSettings>>().Value);
     }
     private static void AddServices(IServiceCollection services)
     {
-        services.AddSingleton<IMongoService, MongoService>();
         services.AddScoped<IDocumentService, Services.DocumentService>();
     }
 

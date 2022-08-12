@@ -12,6 +12,6 @@ namespace Core.Interfaces
         Task Delete(string docId,HttpContext httpContext);
         Task<FileContentResult> DownloadAllFiles(HttpContext httpContext);
         Task<FileContentResult> DownloadById(string id,HttpContext httpContext);
-        Task<IList<DocumentEntity>> ShowAll(HttpContext httpContext);
+        Task<IEnumerable<DocumentEntity>> ShowAll(HttpContext httpContext);
     }
 }

@@ -58,11 +58,11 @@ public class DocumentService : IDocumentService
         return result;
     }
 
-    public async Task<IList<DocumentEntity>> ShowAll(HttpContext httpContext)
+    public async Task<IEnumerable<DocumentEntity>> ShowAll(HttpContext httpContext)
     {
         if (_authHelper.IsAuthenticated(httpContext) || _authHelper.IsViewer(httpContext))
-            return await _documentRepository.GetEntities();
-        return await _documentRepository.GetEntities(_authHelper.GetAuthenticatedId(httpContext));
+            return await _documentRepository.GetAllAsync();
+        return await _documentRepository.GetAllAsync(d=>d.UserId==_authHelper.GetAuthenticatedId(httpContext));
     }
 
 
@@ -74,7 +74,11 @@ public class DocumentService : IDocumentService
             throw new UnAuthorizedRequest("User does not have an access to this file");
         }
         File.Delete(document.Path);
-        await _documentRepository.DeleteAsync(docId);
+        var result = await _documentRepository.DeleteAsync(docId);
+        if (result == null)
+        {
+            throw new DocumentNotFoundException();
+        }
     }
 
     public async Task<UploadResultDto> Upload(HttpContext httpContext)
@@ -92,7 +96,7 @@ public class DocumentService : IDocumentService
             if (file.Length > 0)
             {
                 var document = await _fileHelper.UploadFiles(file,httpContext);
-                await _documentRepository.CreateAsync(document);
+                await _documentRepository.AddAsync(document);
                 createdDocuments.Add(file.FileName,document.Id);
             }
         }
