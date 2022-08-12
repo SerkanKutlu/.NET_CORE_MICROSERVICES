@@ -1,12 +1,11 @@
 ﻿using CustomerService.Domain.ValueObjects;
+using GenericMongo.Bases;
+
 namespace CustomerService.Domain.Entities;
 
-public class Customer
+public class Customer : BaseEntity
 {
-    public string Id { get; set; }
     public string Name { get; set; }
     public string Email { get; set; }
     public Address Address { get; set; }
-    public DateTime CreatedAt { get; set; }
-    public DateTime UpdatedAt { get; set; }
 }

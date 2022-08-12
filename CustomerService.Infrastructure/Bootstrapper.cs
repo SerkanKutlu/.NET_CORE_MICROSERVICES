@@ -3,8 +3,8 @@ using CustomerService.Application.Helpers;
 using CustomerService.Application.Interfaces;
 using CustomerService.Application.Middlewares;
 using CustomerService.Application.Validations;
+using CustomerService.Domain.Entities;
 using CustomerService.Infrastructure.HttpClient;
-using CustomerService.Infrastructure.Mongo;
 using CustomerService.Infrastructure.Repository;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -43,6 +43,12 @@ public static class Bootstrapper
 
     private static void AddRepositories(IServiceCollection services, IConfiguration configuration)
     {
+        GenericMongo.Bootstrapper.AddGenericMongo<Customer>(services, settings =>
+        {
+            settings.CollectionName = configuration.GetSection("MongoSettings")["CollectionName"];
+            settings.ConnectionString = configuration.GetSection("MongoSettings")["ConnectionString"];
+            settings.DatabaseName = configuration.GetSection("MongoSettings")["DatabaseName"];
+        });
         services.AddScoped<ICustomerRepository, CustomerRepository>();
     }
     
@@ -78,14 +84,10 @@ public static class Bootstrapper
         //(IOptionsSnapchat)
         services.AddScoped<IHttpClientProperty>(provider=>provider.GetRequiredService<IOptionsSnapshot<HttpClientProperty>>().Value);
         
-        
-        services.Configure<MongoSettings>(configuration.GetSection(nameof(MongoSettings)));
-        services.AddSingleton<IMongoSettings>(provider=>provider.GetRequiredService<IOptions<MongoSettings>>().Value);
     }
 
     private static void AddServices(IServiceCollection services)
     {
-        services.AddSingleton<IMongoService, MongoService>();
         services.AddScoped<ICustomerService, Services.CustomerService>();
         
         services.AddHttpClient("httpClient")

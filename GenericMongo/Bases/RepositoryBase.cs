@@ -12,13 +12,13 @@ public class RepositoryBase<T> : IRepository<T> where T:BaseEntity
     {
         _collection = mongoService.Collection;
     }
-    public virtual IEnumerable<T> Get(Expression<Func<T, bool>> predicate)
+    public virtual async  Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> predicate)
     {
-        return _collection.Find(predicate).ToList();
+        return await _collection.Find(predicate).ToListAsync();
     }
-    public virtual IEnumerable<T> Get()
+    public virtual async  Task<IEnumerable<T>> GetAllAsync()
     {
-        return _collection.Find(i=>true).ToList();
+        return await _collection.Find(i=>true).ToListAsync();
     }
 
     public virtual async Task<T> GetAsync(Expression<Func<T, bool>> predicate)

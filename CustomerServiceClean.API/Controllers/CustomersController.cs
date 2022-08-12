@@ -27,9 +27,9 @@ public class CustomersController : ControllerBase
     /// <response code="500">Server Error</response>
     [HttpGet]
     //[Authorize]
-    public async Task<IActionResult> GetAll([FromQuery] RequestParameters requestParameters)
+    public async Task<IActionResult> GetPagedCustomers([FromQuery] RequestParameters requestParameters)
     {
-        var customers = await _customerService.GetAllCustomers(requestParameters,HttpContext);
+        var customers = await _customerService.GetPagedCustomers(requestParameters,HttpContext);
         return Ok(customers);
     }
     

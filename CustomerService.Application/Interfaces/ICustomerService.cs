@@ -7,7 +7,7 @@ namespace CustomerService.Application.Interfaces;
 
 public interface ICustomerService
 {
-    Task<PagedList<Customer>> GetAllCustomers(RequestParameters requestParameters,HttpContext context);
+    Task<PagedList<Customer>> GetPagedCustomers(RequestParameters requestParameters,HttpContext context);
     Task<Customer> GetById(string id);
     Task ValidateCustomer(string id);
     Task<string> CreateCustomer(CustomerForCreationDto customerForCreation,HttpContext context);

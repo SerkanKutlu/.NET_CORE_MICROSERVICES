@@ -1,4 +1,5 @@
-﻿using CustomerService.Application.Interfaces;
+﻿using CustomerService.Application.Exceptions;
+using CustomerService.Application.Interfaces;
 using CustomerService.Domain.Entities;
 
 namespace CustomerService.Application.Helpers;
@@ -13,7 +14,11 @@ public class CustomerHelper : ICustomerHelper
 
     public async Task SetCreatedAt(Customer customerForUpdate)
     {
-        var oldCustomer = await _customerRepository.GetWithId(customerForUpdate.Id);
+        var oldCustomer = await _customerRepository.GetByIdAsync(customerForUpdate.Id);
+        if (oldCustomer == null)
+        {
+            throw new NotFoundException<Customer>();
+        }
         customerForUpdate.CreatedAt = oldCustomer.CreatedAt;
     }
 }
