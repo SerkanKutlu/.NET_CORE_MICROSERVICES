@@ -14,4 +14,11 @@ public class MongoService<T>:IMongoService<T> where T:BaseEntity
         var database = client.GetDatabase(setting.DatabaseName);
         Collection = database.GetCollection<T>(setting.CollectionName);
     }
+    public MongoService(MongoSettings setting, Action<IMongoCollection<T>> indexes)
+    {
+        var client = new MongoClient(setting.ConnectionString);
+        var database = client.GetDatabase(setting.DatabaseName);
+        Collection = database.GetCollection<T>(setting.CollectionName);
+        indexes(Collection);
+    }
 }

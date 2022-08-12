@@ -16,6 +16,7 @@ public class CustomerRepository : RepositoryBase<Customer>,ICustomerRepository
     public CustomerRepository(IMongoService<Customer> mongoService) : base(mongoService)
     {
         _collection = mongoService.Collection;
+        
     }
 
     public async Task<PagedList<Customer>> GetPaged(RequestParameters requestParameters)

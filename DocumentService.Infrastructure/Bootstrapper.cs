@@ -7,6 +7,7 @@ using GenericMongo;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MongoDB.Driver;
 
 namespace DocumentService.Infrastructure;
 
@@ -20,9 +21,14 @@ public static class Bootstrapper
         return services;
     }
     
-    public static IApplicationBuilder UseCustomMiddlewares(this IApplicationBuilder app)
+    public static IApplicationBuilder UseCustomExceptionMiddleware(this IApplicationBuilder app)
     {
         app.UseMiddleware<ExceptionMiddleware>();
+        return app;
+    }
+    public static IApplicationBuilder UseCustomAuthMiddleware(this IApplicationBuilder app)
+    {
+        app.UseMiddleware<AuthMiddleware>();
         return app;
     }
 
@@ -33,12 +39,22 @@ public static class Bootstrapper
             settings.CollectionName = configuration.GetSection("MongoSettings")["CollectionName"];
             settings.ConnectionString = configuration.GetSection("MongoSettings")["ConnectionString"];
             settings.DatabaseName = configuration.GetSection("MongoSettings")["DatabaseName"];
+        }, collection =>
+        {
+            var options = new CreateIndexOptions
+            {
+                ExpireAfter = TimeSpan.FromSeconds(0),
+                Name = "ExpireIndex"
+            };
+            var indexModel = new CreateIndexModel<DocumentEntity>("{ExpireAt:1}",options);
+            collection.Indexes.CreateOne(indexModel);
         });
         services.AddScoped<IDocumentRepository, DocumentRepository>();
     }
     private static void AddServices(IServiceCollection services)
     {
         services.AddScoped<IDocumentService, Services.DocumentService>();
+        services.AddHttpClient();
     }
 
     private static void AddHelpers(IServiceCollection services)

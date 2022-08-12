@@ -72,8 +72,9 @@ namespace Core.Helpers
             var mimeType = GetMimeType(file.FileName);
             var savingFolder = "Documents";
             //Adding timeStamp to file name
-            var date = new DateTimeOffset(DateTime.UtcNow);
-            var unixTime = date.ToUnixTimeSeconds().ToString();
+            var date = DateTime.UtcNow;
+            var dateOffSet = new DateTimeOffset(DateTime.UtcNow);
+            var unixTime = dateOffSet.ToUnixTimeSeconds().ToString();
             //Setting path
             var pathToSave = Path.Combine(Directory.GetCurrentDirectory(),
                 $"{savingFolder}\\{unixTime}_{file.FileName}");
@@ -83,9 +84,11 @@ namespace Core.Helpers
                 Id = Guid.NewGuid().ToString(),
                 MimeType = mimeType,
                 OriginalFileName = file.FileName,
-                UploadedAt = unixTime,
+                UploadedAt = date,
+                CreatedAt = date,
                 UserId = _authHelper.GetAuthenticatedId(httpContext),
-                Path = pathToSave
+                Path = pathToSave,
+                ExpireAt = date.AddMonths(1),
             };
             if (CheckIfImage(mimeType))
             {

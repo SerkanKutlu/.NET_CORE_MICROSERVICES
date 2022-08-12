@@ -23,6 +23,8 @@ public class TokenHandler : ITokenHandler
         var symmetricKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Token:SecurityKey"]));
         var signingCredentials = new SigningCredentials(symmetricKey, SecurityAlgorithms.HmacSha256);
         token.Expiration = DateTime.UtcNow.AddMinutes(10);
+        token.Id = Guid.NewGuid().ToString();
+        token.UserId = user.Id;
         var claimList = new List<Claim>
         {
             new Claim(ClaimTypes.Name, user.Name),
@@ -30,6 +32,7 @@ public class TokenHandler : ITokenHandler
             new Claim(ClaimTypes.Email, user.Email),
             new Claim(ClaimTypes.Role, user.Role),
             new Claim(ClaimTypes.PrimarySid, user.Id),
+            new Claim(ClaimTypes.Sid,token.Id)
         };
         var jwtToken = new JwtSecurityToken(
             _configuration["Token:Issuer"],
@@ -40,6 +43,7 @@ public class TokenHandler : ITokenHandler
             signingCredentials: signingCredentials);
         var tokenHandler = new JwtSecurityTokenHandler();
         token.AccessToken = tokenHandler.WriteToken(jwtToken);
+        token.IsValid = true;
         return token;
     }
 }

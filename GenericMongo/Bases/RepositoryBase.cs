@@ -51,4 +51,9 @@ public class RepositoryBase<T> : IRepository<T> where T:BaseEntity
     {
         return await _collection.FindOneAndDeleteAsync(e => e.Id == id);
     }
+
+    public async Task<T> DeleteAsync(Expression<Func<T, bool>> predicate)
+    {
+        return await _collection.FindOneAndDeleteAsync(predicate);
+    }
 }

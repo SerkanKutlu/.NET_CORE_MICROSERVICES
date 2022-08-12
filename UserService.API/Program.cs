@@ -1,9 +1,14 @@
 using System.Text;
+using GenericMongo;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using UserService.Core;
-using UserService.Infrastructure; //Only for dependency
+using UserService.Core.Interfaces;
+using UserService.Core.Middlewares;
+using UserService.Core.Models;
+using UserService.Infrastructure;
+using UserService.Infrastructure.Repository; //Only for dependency
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -60,6 +65,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     };
 });
 
+builder.Services.AddGenericMongo<Token>(settings =>
+{
+    settings.CollectionName = "Tokens";
+    settings.ConnectionString = "mongodb://root:155202Asd...@localhost:27017";
+    settings.DatabaseName = "UserServiceDb";
+});
+builder.Services.AddScoped<ITokenRepository,TokenRepository>();
 #endregion
 
 var app = builder.Build();
@@ -71,6 +83,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseHttpsRedirection();
 
 app.UseAuthentication();

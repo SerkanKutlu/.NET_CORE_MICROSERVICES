@@ -47,4 +47,18 @@ public class UserRepository : IUserRepository
         if (!result.IsModifiedCountAvailable && result.ModifiedCount == 0)
             throw new NotFoundException<User>(id);
     }
+
+    public async Task UpdateUserPassword(User user, string newPassword)
+    {
+        user.Password = _passwordHasher.HashPassword(user, newPassword);
+        var result = await _mongoService.Users.FindOneAndReplaceAsync(u=>u.Id == user.Id,user);
+        if (result == null)
+        {
+            throw new NotFoundException<User>();
+        }
+    }
+
+
+    
+
 }

@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 using Polly;
 using Serilog;
 using Serilog.Events;
@@ -48,6 +49,11 @@ public static class Bootstrapper
             settings.CollectionName = configuration.GetSection("MongoSettings")["CollectionName"];
             settings.ConnectionString = configuration.GetSection("MongoSettings")["ConnectionString"];
             settings.DatabaseName = configuration.GetSection("MongoSettings")["DatabaseName"];
+        }, collection =>
+        {
+            var options = new CreateIndexOptions {Unique = true};
+            var indexModel = new CreateIndexModel<Customer>("{Email:1}",options);
+            collection.Indexes.CreateOne(indexModel);
         });
         services.AddScoped<ICustomerRepository, CustomerRepository>();
     }
