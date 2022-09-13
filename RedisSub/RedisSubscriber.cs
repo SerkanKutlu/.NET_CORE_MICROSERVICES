@@ -5,7 +5,7 @@ using RedisSub.Entities;
 using RedisSub.Interfaces;
 using RedisSub.Repositories;
 
-namespace RedisSub.Services;
+namespace RedisSub;
 
 public class RedisSubscriber : IRedisSubscriber
 {

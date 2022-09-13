@@ -14,9 +14,5 @@ public class Worker : BackgroundService
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         await _redisSubscriber.Subscribe();
-        while (!stoppingToken.IsCancellationRequested)
-        {
-            
-        }
     }
 }

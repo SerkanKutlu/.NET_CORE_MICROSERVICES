@@ -15,14 +15,12 @@ public class CustomerService : ICustomerService
     private readonly ILogger<CustomerService> _logger;
     private readonly ICustomerRepository _customerRepository;
     private readonly ICustomerHelper _customerHelper;
-    private readonly IPublisher _publisher;
-    public readonly IRedisPublisher _redisPublisher;
-    public CustomerService(ICustomerHelper customerHelper, ICustomerRepository customerRepository,ILogger<CustomerService> logger, IPublisher publisher,IRedisPublisher redisPublisher)
+    private readonly IRedisPublisher _redisPublisher;
+    public CustomerService(ICustomerHelper customerHelper, ICustomerRepository customerRepository,ILogger<CustomerService> logger,IRedisPublisher redisPublisher)
     {
         _customerHelper = customerHelper;
         _customerRepository = customerRepository;
         _logger = logger;
-        _publisher = publisher;
         _redisPublisher = redisPublisher;
     }
 

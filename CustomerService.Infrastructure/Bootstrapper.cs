@@ -82,7 +82,7 @@ public static class Bootstrapper
     private static void AddHelpers(IServiceCollection services,IConfiguration configuration)
     {
         services.AddScoped<ICustomerHelper, CustomerHelper>();
-        services.AddSingleton<IPublisher, Publisher>();
+        //services.AddSingleton<IPublisher, Publisher>();
         services.AddScoped<IHttpRequest, HttpRequest>();
     }
 

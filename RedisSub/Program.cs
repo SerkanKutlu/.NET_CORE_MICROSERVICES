@@ -6,7 +6,6 @@ using RedisSub;
 using RedisSub.Entities;
 using RedisSub.Interfaces;
 using RedisSub.Repositories;
-using RedisSub.Services;
 
 IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices(services =>
