@@ -9,8 +9,4 @@
       <ProjectReference Include="..\CustomerService.Application\CustomerService.Application.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-
-    </ItemGroup>
-
 </Project>

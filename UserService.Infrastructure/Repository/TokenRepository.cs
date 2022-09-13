@@ -15,26 +15,4 @@ public class TokenRepository : RepositoryBase<Token>,ITokenRepository
         _tokens = mongoService.Collection;
     }
     
-    public async Task ValidateToken(string id)
-    {
-        var token = await _tokens.Find(t => t.Id == id).FirstOrDefaultAsync();
-        if (token == null)
-        {
-            throw new NotFoundException<Token>();
-        }
-
-        if (!token.IsValid)
-        {
-            throw new InvalidTokenException();
-        }
-    }
-
-    public async Task SetTokenInvalidate(string userId)
-    {
-        var token = await _tokens.Find(t => t.UserId == userId).FirstOrDefaultAsync();
-        if(token == null)
-            return;
-        token.IsValid = false;
-        await UpdateAsync(token);
-    }
 }

@@ -8,47 +8,9 @@ services:
       - HttpClientProperty:DeleteOrderUrl=https://gateway/order/customer
     ports:
       - "8000:80"
-  orderserviceclean.api:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - MongoSettings:ConnectionString=mongodb://root:155202Asd...@mongodb:27017
-      - HttpClientProperty:GetAddressUrl=https://gateway/customers
-    ports:
-      - "8002:80"
-
-  userservice.api:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - MongoSettings:ConnectionString=mongodb://root:155202Asd...@mongodb:27017
-    ports:
-      - "5181:80"
-
   gateway:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
     ports:
       - "5000:80"
   
-  publisher_rabbit:
-    container_name: publisher_rabbit
-    image: rabbitmq:management
-    ports:
-      - "8080:15672"
-      - "5672:5672"
-  consumer_rabbit:
-    container_name: consumer_rabbit
-    image: rabbitmq-management-with-federation
-    build:
-      context: .
-      dockerfile: ./Dockerfile
-    ports:
-      - "8081:15672"
-      - "5673:5672"
-  mongodb:
-    container_name: mongodb
-    restart: always
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: 155202Asd...
-    ports:
-      - "27017:27017"

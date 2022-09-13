@@ -18,6 +18,7 @@ public class DocumentController : ControllerBase
     [Authorize(Roles="Admin,User,Viewer")]
     public async Task<IActionResult> ShowAll()
     {
+        return Ok("role based gecildi");
         var result =await _documentService.ShowAll(HttpContext);
         return Ok(result);
     }

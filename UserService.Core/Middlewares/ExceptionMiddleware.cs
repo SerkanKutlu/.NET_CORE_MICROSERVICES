@@ -48,4 +48,4 @@ public class ExceptionMiddleware
         await httpContext.Response.WriteAsync(new ErrorDetails("Internal server error occured, try again",(int)HttpStatusCode.InternalServerError)
         .ToString());
     }
-}
+}    

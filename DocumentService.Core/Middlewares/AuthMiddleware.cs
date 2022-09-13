@@ -17,8 +17,8 @@ public class AuthMiddleware
     public async Task InvokeAsync(HttpContext httpContext)
     {
         var userClaims = ((ClaimsIdentity)httpContext.User.Identity)?.Claims.ToList();
-        var tokenId  = userClaims?.FirstOrDefault(c => c.Type == ClaimTypes.Sid)?.Value;
-        var response = _factory.CreateClient().GetAsync($"https://localhost:7181/api/User/validate/token/{tokenId}").Result;
+        var userId  = userClaims?.FirstOrDefault(c => c.Type == "UserId")?.Value;
+        var response = _factory.CreateClient().GetAsync($"https://localhost:7181/api/User/validate/token/{userId}").Result;
         if(response.IsSuccessStatusCode)
             await _next(httpContext);
         else

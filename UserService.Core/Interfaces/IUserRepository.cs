@@ -10,5 +10,6 @@ public interface IUserRepository
     Task<IEnumerable<User>> GetAllUsers();
     Task UpdateUserRole(string id, string newRole);
     Task UpdateUserPassword(User user, string newPassword);
-
+    Task ValidateToken(string id);
+    Task UpdateUser(User user);
 }

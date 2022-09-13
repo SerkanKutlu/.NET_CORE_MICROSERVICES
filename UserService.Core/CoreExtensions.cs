@@ -13,9 +13,7 @@ public static class DataExtensions
     {
         
         services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
-        //Auto Mapper
-        services.AddAutoMapper(Assembly.GetExecutingAssembly());
-       
+
         return services;
     }
     

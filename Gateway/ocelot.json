@@ -37,64 +37,64 @@
       "UpstreamPathTemplate": "/Customers/validate/{id}"
     },
     {
-      "DownstreamPathTemplate": "/api/Order",
-      "DownstreamScheme": "https",
+      "DownstreamPathTemplate": "/api/order",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": "8003"
+          "Port": "9000"
         }
       ],
       "UpstreamHttpMethod": ["GET","POST","PUT"],
-      "UpstreamPathTemplate": "/Order"
+      "UpstreamPathTemplate": "/order"
     },
     {
-      "DownstreamPathTemplate": "/api/Order/{id}",
-      "DownstreamScheme": "https",
+      "DownstreamPathTemplate": "/api/order/{id}",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": "8003"
+          "Port": "9000"
         }
       ],
       "UpstreamHttpMethod": ["GET","DELETE"],
-      "UpstreamPathTemplate": "/Order/{id}"
+      "UpstreamPathTemplate": "/order/{id}"
     },
     {
-      "DownstreamPathTemplate": "/api/Order/customer/{id}",
-      "DownstreamScheme": "https",
+      "DownstreamPathTemplate": "/api/order/customer/{id}",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": "8003"
+          "Port": "9000"
         }
       ],
       "UpstreamHttpMethod": ["GET","DELETE"],
-      "UpstreamPathTemplate": "/Order/customer/{id}"
+      "UpstreamPathTemplate": "/order/customer/{id}"
     },
     {
       "DownstreamPathTemplate": "/api/Product",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": "8003"
+          "Port": "9000"
         }
       ],
-      "UpstreamHttpMethod": ["GET","POST","PUT","DELETE"],
-      "UpstreamPathTemplate": "/Product"
+      "UpstreamHttpMethod": ["GET","POST","PUT"],
+      "UpstreamPathTemplate": "/product"
     },
     {
-      "DownstreamPathTemplate": "/api/Product/{id}",
-      "DownstreamScheme": "https",
+      "DownstreamPathTemplate": "/api/product/{id}",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": "8003"
+          "Port": "9000"
         }
       ],
       "UpstreamHttpMethod": ["GET","DELETE"],
-      "UpstreamPathTemplate": "/Product/{id}"
+      "UpstreamPathTemplate": "/product/{id}"
     },
     {
       "DownstreamPathTemplate": "/api/User",

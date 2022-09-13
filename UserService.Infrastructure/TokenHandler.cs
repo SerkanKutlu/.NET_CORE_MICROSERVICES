@@ -23,20 +23,13 @@ public class TokenHandler : ITokenHandler
         var symmetricKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Token:SecurityKey"]));
         var signingCredentials = new SigningCredentials(symmetricKey, SecurityAlgorithms.HmacSha256);
         token.Expiration = DateTime.UtcNow.AddMinutes(10);
-        token.Id = Guid.NewGuid().ToString();
         token.UserId = user.Id;
         var claimList = new List<Claim>
         {
-            new Claim(ClaimTypes.Name, user.Name),
-            new Claim(ClaimTypes.Surname, user.Surname),
-            new Claim(ClaimTypes.Email, user.Email),
-            new Claim(ClaimTypes.Role, user.Role),
-            new Claim(ClaimTypes.PrimarySid, user.Id),
-            new Claim(ClaimTypes.Sid,token.Id)
+            new ("Role", user.Role),
+            new ("UserId", user.Id),
         };
         var jwtToken = new JwtSecurityToken(
-            _configuration["Token:Issuer"],
-            _configuration["Token:Audience"],
             claims:claimList,
             expires: token.Expiration,
             notBefore: DateTime.UtcNow,

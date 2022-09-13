@@ -5,9 +5,11 @@ using CustomerService.Application.Middlewares;
 using CustomerService.Application.Validations;
 using CustomerService.Domain.Entities;
 using CustomerService.Infrastructure.HttpClient;
+using CustomerService.Infrastructure.Redis;
 using CustomerService.Infrastructure.Repository;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using GenericMongo;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,6 +19,7 @@ using MongoDB.Driver;
 using Polly;
 using Serilog;
 using Serilog.Events;
+using StackExchange.Redis;
 
 namespace CustomerService.Infrastructure;
 
@@ -86,9 +89,12 @@ public static class Bootstrapper
     private static void AddConfigurations(IServiceCollection services,IConfiguration configuration)
     {
         services.Configure<HttpClientProperty>(configuration.GetSection(nameof(HttpClientProperty)));
-        
         //(IOptionsSnapchat)
         services.AddScoped<IHttpClientProperty>(provider=>provider.GetRequiredService<IOptionsSnapshot<HttpClientProperty>>().Value);
+        
+        //Redis
+        services.Configure<RedisSettings>(configuration.GetSection(nameof(RedisSettings)));
+        services.AddSingleton<IRedisSettings>(provider=>provider.GetRequiredService<IOptions<RedisSettings>>().Value);
         
     }
 
@@ -106,6 +112,7 @@ public static class Bootstrapper
             {
             }));
 
-        
+        services.AddSingleton<IRedisService, RedisService>();
+        services.AddSingleton<IRedisPublisher, RedisPublisher>();
     }
 }

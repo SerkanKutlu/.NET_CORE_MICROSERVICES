@@ -14,6 +14,7 @@ host.ConfigureServices(services =>
         .Build();
     services.AddHostedService<Worker>();
     services.AddSingleton<IConsumerService, ConsumerService>();
+    var x = configuration.GetSection(nameof(MongoSettings));
     services.Configure<MongoSettings>(configuration.GetSection(nameof(MongoSettings)));
     services.AddSingleton<IMongoSettings>(provider=>provider.GetRequiredService<IOptions<MongoSettings>>().Value);
     services.AddSingleton<IMongoService,MongoService>();

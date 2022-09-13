@@ -7,40 +7,9 @@ services:
     build:
       context: .
       dockerfile: CustomerServiceClean.API/Dockerfile
-
-  orderserviceclean.api:
-    container_name: orderserviceclean.api
-    image: ${DOCKER_REGISTRY-}orderservicecleanapi
-    build:
-      context: .
-      dockerfile: OrderServiceClean.API/Dockerfile
-
-
-  userservice.api:
-    container_name: userservice.api
-    image: ${DOCKER_REGISTRY-}userserviceapi
-    build:
-      context: .
-      dockerfile: UserService.API/Dockerfile
-
-
   gateway:
     container_name: gateway
     image: ${DOCKER_REGISTRY-}gateway
     build:
       context: .
       dockerfile: Gateway/Dockerfile
-
-  publisher_rabbit:
-    container_name: publisher_rabbit
-    image: rabbitmq:management
-
-  consumer_rabbit:
-    container_name: consumer_rabbit
-    image: rabbitmq-management-with-federation
-    build:
-      context: .
-      dockerfile: ./Dockerfile
-  mongodb:
-    container_name: mongodb
-    image: mongo

@@ -4,6 +4,7 @@ using CustomerService.Application.Exceptions;
 using CustomerService.Application.Interfaces;
 using CustomerService.Application.Models;
 using CustomerService.Domain.Entities;
+using CustomerService.Infrastructure.Redis;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
@@ -15,12 +16,14 @@ public class CustomerService : ICustomerService
     private readonly ICustomerRepository _customerRepository;
     private readonly ICustomerHelper _customerHelper;
     private readonly IPublisher _publisher;
-    public CustomerService(ICustomerHelper customerHelper, ICustomerRepository customerRepository,ILogger<CustomerService> logger, IPublisher publisher)
+    public readonly IRedisPublisher _redisPublisher;
+    public CustomerService(ICustomerHelper customerHelper, ICustomerRepository customerRepository,ILogger<CustomerService> logger, IPublisher publisher,IRedisPublisher redisPublisher)
     {
         _customerHelper = customerHelper;
         _customerRepository = customerRepository;
         _logger = logger;
         _publisher = publisher;
+        _redisPublisher = redisPublisher;
     }
 
     public async Task<PagedList<Customer>> GetPagedCustomers(RequestParameters requestParameters, HttpContext context)
@@ -62,7 +65,7 @@ public class CustomerService : ICustomerService
             $"https://{context.Request.Headers["Host"]}/api/Customers/{customer.Id}");
         var customerForLog = new CustomerForLogDto();
         customerForLog.FillWithCustomer(customer,"Created");
-        //await _publisher.PublishForLog(customerForLog);
+        await _redisPublisher.Publish(customerForLog);
         return customer.Id;
     }
 
@@ -90,4 +93,5 @@ public class CustomerService : ICustomerService
         }
         _logger.LogInformation($"Customer with id {id} deleted.");
     }
+    
 }

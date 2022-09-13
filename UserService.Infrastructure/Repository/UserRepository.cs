@@ -21,14 +21,14 @@ public class UserRepository : IUserRepository
     {
         var user = await _mongoService.Users.Find(user => user.Email == email).FirstOrDefaultAsync();
         if (user == null) throw new NotFoundException<User>();
-        if (_passwordHasher.VerifyHashedPassword(user,user.Password,password) == PasswordVerificationResult.Failed) throw new InvalidPasswordException();
+        if (!BCrypt.Net.BCrypt.Verify(password,user.Password))
+            throw new InvalidPasswordException();
         return user;
     }
 
     public async Task RegisterAsync(User user)
     {
-        user.Password =  _passwordHasher.HashPassword(user,user.Password);
-        user.Role = UserRoles.User;
+        user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
         await _mongoService.Users.InsertOneAsync(user);
     }
 
@@ -58,7 +58,22 @@ public class UserRepository : IUserRepository
         }
     }
 
+    public async Task UpdateUser(User user)
+    {
+        var result = await _mongoService.Users.FindOneAndReplaceAsync(u=>u.Id == user.Id,user);
+        if (result == null)
+        {
+            throw new NotFoundException<User>();
+        }
+    }
 
-    
-
+    public async Task ValidateToken(string id)
+    {
+        var user = await _mongoService.Users.Find(u => u.Id == id).FirstOrDefaultAsync();
+        if (user == null)
+            throw new NotFoundException<User>();
+        if (user.PasswordChanged)
+            throw new InvalidTokenException();
+        
+    }
 }

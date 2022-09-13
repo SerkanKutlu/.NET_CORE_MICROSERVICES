@@ -16,7 +16,6 @@ public class MongoService :IMongoService
         var database = client.GetDatabase(mongoSettings.DatabaseName);
         Users = database.GetCollection<User>(mongoSettings.CollectionName);
         Tokens = database.GetCollection<Token>("TokenCollection");
-        SeedUserData.SeedData(Users);
         //Unique Email Area
         
         var options = new CreateIndexOptions {Unique = true};
