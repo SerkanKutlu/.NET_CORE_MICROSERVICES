@@ -26,6 +26,7 @@ IHost host = Host.CreateDefaultBuilder(args)
         });
         services.AddSingleton<LogRepository>();
         services.AddSingleton<IRedisSubscriber, RedisSubscriber>();
+        services.AddSingleton<IRedisPublisher, RedisPublisher>();
     })
     .Build();
 

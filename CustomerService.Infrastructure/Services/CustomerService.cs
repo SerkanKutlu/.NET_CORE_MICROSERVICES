@@ -58,7 +58,6 @@ public class CustomerService : ICustomerService
     {
         var customer = customerForCreation.ToCustomer();
         await _customerRepository.AddAsync(customer);
-        //await _customerRepository.CreateAsync(customer);
         context.Response.Headers.Add("location",
             $"https://{context.Request.Headers["Host"]}/api/Customers/{customer.Id}");
         var customerForLog = new CustomerForLogDto();
