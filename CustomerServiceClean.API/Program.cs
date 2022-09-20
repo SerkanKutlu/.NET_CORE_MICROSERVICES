@@ -58,8 +58,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Token:SecurityKey"]))
     };
 });
-var x = builder.Configuration.GetSection("RedisSettings");
-Console.WriteLine(x);
 #endregion
 var app = builder.Build();
 

@@ -5,6 +5,8 @@ using CustomerService.Application.Middlewares;
 using CustomerService.Application.Validations;
 using CustomerService.Domain.Entities;
 using CustomerService.Infrastructure.HttpClient;
+using CustomerService.Infrastructure.Kafka;
+using CustomerService.Infrastructure.Rabbit;
 using CustomerService.Infrastructure.Redis;
 using CustomerService.Infrastructure.Repository;
 using FluentValidation;
@@ -96,6 +98,13 @@ public static class Bootstrapper
         services.Configure<RedisSettings>(configuration.GetSection(nameof(RedisSettings)));
         services.AddSingleton<IRedisSettings>(provider=>provider.GetRequiredService<IOptions<RedisSettings>>().Value);
         
+        //Kafka
+        services.Configure<KafkaSettings>(configuration.GetSection(nameof(KafkaSettings)));
+        services.AddSingleton<IKafkaSettings>(provider=>provider.GetRequiredService<IOptions<KafkaSettings>>().Value);
+        
+        //Rabbit
+        services.Configure<RabbitSettings>(configuration.GetSection(nameof(RabbitSettings)));
+        services.AddSingleton<IRabbitSettings>(provider=>provider.GetRequiredService<IOptions<RabbitSettings>>().Value);
     }
 
     private static void AddServices(IServiceCollection services)
@@ -112,7 +121,12 @@ public static class Bootstrapper
             {
             }));
 
+        //Redis
         services.AddSingleton<IRedisService, RedisService>();
         services.AddSingleton<IRedisPublisher, RedisPublisher>();
+        //Kafka
+        services.AddSingleton<IKafkaPublisher, KafkaPublisher>();
+        //Rabbit
+        services.AddSingleton<IRabbitPublisher, RabbitPublisher>();
     }
 }

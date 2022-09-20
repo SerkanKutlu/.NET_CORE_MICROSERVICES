@@ -1,10 +1,10 @@
 ﻿using System.Text.Json;
 using CustomerService.Application.Dto;
+using CustomerService.Application.Events;
 using CustomerService.Application.Exceptions;
 using CustomerService.Application.Interfaces;
 using CustomerService.Application.Models;
 using CustomerService.Domain.Entities;
-using CustomerService.Infrastructure.Redis;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
@@ -16,12 +16,16 @@ public class CustomerService : ICustomerService
     private readonly ICustomerRepository _customerRepository;
     private readonly ICustomerHelper _customerHelper;
     private readonly IRedisPublisher _redisPublisher;
-    public CustomerService(ICustomerHelper customerHelper, ICustomerRepository customerRepository,ILogger<CustomerService> logger,IRedisPublisher redisPublisher)
+    private readonly IKafkaPublisher _kafkaPublisher;
+    private readonly IRabbitPublisher _rabbitPublisher;
+    public CustomerService(ICustomerHelper customerHelper, ICustomerRepository customerRepository,ILogger<CustomerService> logger,IRedisPublisher redisPublisher, IKafkaPublisher kafkaPublisher, IRabbitPublisher rabbitPublisher)
     {
         _customerHelper = customerHelper;
         _customerRepository = customerRepository;
         _logger = logger;
         _redisPublisher = redisPublisher;
+        _kafkaPublisher = kafkaPublisher;
+        _rabbitPublisher = rabbitPublisher;
     }
 
     public async Task<PagedList<Customer>> GetPagedCustomers(RequestParameters requestParameters, HttpContext context)
@@ -60,9 +64,11 @@ public class CustomerService : ICustomerService
         await _customerRepository.AddAsync(customer);
         context.Response.Headers.Add("location",
             $"https://{context.Request.Headers["Host"]}/api/Customers/{customer.Id}");
-        var customerForLog = new CustomerForLogDto();
-        customerForLog.FillWithCustomer(customer,"Created");
-        await _redisPublisher.Publish(customerForLog);
+        var customerCreated = new CustomerCreated();
+        customerCreated.FillWithCustomer(customer);
+        await _kafkaPublisher.Publish(customerCreated);
+        await _redisPublisher.Publish(customerCreated);
+        _rabbitPublisher.Publish(customerCreated);
         return customer.Id;
     }
 
@@ -75,9 +81,6 @@ public class CustomerService : ICustomerService
         {
             throw new NotFoundException<Customer>(customerForUpdate.Id);
         }
-        var customerForLog = new CustomerForLogDto();
-        customerForLog.FillWithCustomer(customer,"Updated");
-        //await _publisher.PublishForLog(customerForLog);
         return customer;
     }
 

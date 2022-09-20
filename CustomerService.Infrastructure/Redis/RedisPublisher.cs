@@ -1,5 +1,5 @@
 ﻿using System.Text.Json;
-using CustomerService.Application.Dto;
+using CustomerService.Application.Events;
 using CustomerService.Application.Interfaces;
 using StackExchange.Redis;
 
@@ -12,7 +12,7 @@ public class RedisPublisher : IRedisPublisher
     {
         _redisService = redisService;
     }
-    public async Task Publish(CustomerForLogDto customerForLogDto)
+    public async Task Publish(CustomerCreated customerForLogDto)
     {
         var redisMessage = JsonSerializer.Serialize(customerForLogDto);
         var reachedCount = await _redisService.Subscriber.PublishAsync(_redisService.RedisSettings.ChannelName, redisMessage);
