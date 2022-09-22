@@ -10,6 +10,7 @@ WORKDIR /src
 COPY ["CustomerServiceClean.API/CustomerServiceClean.API.csproj", "CustomerServiceClean.API/"]
 COPY ["CustomerService.Application/CustomerService.Application.csproj", "CustomerService.Application/"]
 COPY ["CustomerService.Domain/CustomerService.Domain.csproj", "CustomerService.Domain/"]
+COPY ["GenericMongo/GenericMongo.csproj", "GenericMongo/"]
 COPY ["CustomerService.Infrastructure/CustomerService.Infrastructure.csproj", "CustomerService.Infrastructure/"]
 RUN dotnet restore "CustomerServiceClean.API/CustomerServiceClean.API.csproj"
 COPY . .

@@ -3,7 +3,7 @@
   <PropertyGroup Label="Globals">
     <ProjectVersion>2.1</ProjectVersion>
     <DockerTargetOS>Linux</DockerTargetOS>
-    <ProjectGuid>74ee49aa-a803-4c71-bc3d-e6239ab42335</ProjectGuid>
+    <ProjectGuid>665b0bb2-e177-43d7-8765-1234f2e3570f</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/swagger</DockerServiceUrl>
     <DockerServiceName>customerserviceclean.api</DockerServiceName>

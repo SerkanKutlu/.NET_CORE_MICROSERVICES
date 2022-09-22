@@ -9,6 +9,7 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["UserService.API/UserService.API.csproj", "UserService.API/"]
 COPY ["UserService.Core/UserService.Core.csproj", "UserService.Core/"]
+COPY ["GenericMongo/GenericMongo.csproj", "GenericMongo/"]
 COPY ["UserService.Infrastructure/UserService.Infrastructure.csproj", "UserService.Infrastructure/"]
 RUN dotnet restore "UserService.API/UserService.API.csproj"
 COPY . .

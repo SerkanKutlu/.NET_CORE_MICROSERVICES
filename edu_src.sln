@@ -25,25 +25,25 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserService.Core", "UserSer
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserService.Infrastructure", "UserService.Infrastructure\UserService.Infrastructure.csproj", "{C13A38B9-4F75-494A-98A5-D6ADE3EF5F38}"
 EndProject
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{74EE49AA-A803-4C71-BC3D-E6239AB42335}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gateway", "Gateway\Gateway.csproj", "{13551411-4B71-4D70-9583-8FAE6AF9CA98}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocumentService.API", "DocumentService.API\DocumentService.API.csproj", "{BF4CE76E-57AE-4791-B967-3C2CD62AD231}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DocumentService.API", "DocumentService.API\DocumentService.API.csproj", "{BF4CE76E-57AE-4791-B967-3C2CD62AD231}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DocumentService", "DocumentService", "{46F312F4-558B-4B36-8E22-74211FE5CBE2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocumentService.Core", "DocumentService.Core\DocumentService.Core.csproj", "{DBA44094-8D45-4576-B5EB-29999F83905D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DocumentService.Core", "DocumentService.Core\DocumentService.Core.csproj", "{DBA44094-8D45-4576-B5EB-29999F83905D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocumentService.Infrastructure", "DocumentService.Infrastructure\DocumentService.Infrastructure.csproj", "{7431E08E-6419-4486-A43E-194C111A95F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DocumentService.Infrastructure", "DocumentService.Infrastructure\DocumentService.Infrastructure.csproj", "{7431E08E-6419-4486-A43E-194C111A95F6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenericMongo", "GenericMongo\GenericMongo.csproj", "{7142BA7C-E048-45D3-B40B-A6EF4A6800C7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenericMongo", "GenericMongo\GenericMongo.csproj", "{7142BA7C-E048-45D3-B40B-A6EF4A6800C7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedisSub", "RedisSub\RedisSub.csproj", "{5DF503C1-0A73-4467-BB39-E93172F97DAE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedisSub", "RedisSub\RedisSub.csproj", "{5DF503C1-0A73-4467-BB39-E93172F97DAE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomerService.KafkaConsumer", "CustomerService.KafkaConsumer\CustomerService.KafkaConsumer.csproj", "{A1B33E06-09E6-426E-BE8F-B2E267985748}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomerService.KafkaConsumer", "CustomerService.KafkaConsumer\CustomerService.KafkaConsumer.csproj", "{A1B33E06-09E6-426E-BE8F-B2E267985748}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomerService.RabbitConsumer", "CustomerService.RabbitConsumer\CustomerService.RabbitConsumer.csproj", "{B4D8BAF4-685F-40E4-98FA-B7585E5BE0EE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomerService.RabbitConsumer", "CustomerService.RabbitConsumer\CustomerService.RabbitConsumer.csproj", "{B4D8BAF4-685F-40E4-98FA-B7585E5BE0EE}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{665B0BB2-E177-43D7-8765-1234F2E3570F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -79,10 +79,6 @@ Global
 		{C13A38B9-4F75-494A-98A5-D6ADE3EF5F38}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C13A38B9-4F75-494A-98A5-D6ADE3EF5F38}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C13A38B9-4F75-494A-98A5-D6ADE3EF5F38}.Release|Any CPU.Build.0 = Release|Any CPU
-		{74EE49AA-A803-4C71-BC3D-E6239AB42335}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{74EE49AA-A803-4C71-BC3D-E6239AB42335}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{74EE49AA-A803-4C71-BC3D-E6239AB42335}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{74EE49AA-A803-4C71-BC3D-E6239AB42335}.Release|Any CPU.Build.0 = Release|Any CPU
 		{13551411-4B71-4D70-9583-8FAE6AF9CA98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{13551411-4B71-4D70-9583-8FAE6AF9CA98}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{13551411-4B71-4D70-9583-8FAE6AF9CA98}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -115,6 +111,10 @@ Global
 		{B4D8BAF4-685F-40E4-98FA-B7585E5BE0EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B4D8BAF4-685F-40E4-98FA-B7585E5BE0EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B4D8BAF4-685F-40E4-98FA-B7585E5BE0EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{665B0BB2-E177-43D7-8765-1234F2E3570F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{665B0BB2-E177-43D7-8765-1234F2E3570F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{665B0BB2-E177-43D7-8765-1234F2E3570F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{665B0BB2-E177-43D7-8765-1234F2E3570F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -131,8 +131,8 @@ Global
 		{9BABA526-D3E8-450D-A639-66BD2B774300} = {C5794B02-61BF-4A9D-8651-4E34D2002E47}
 		{C13A38B9-4F75-494A-98A5-D6ADE3EF5F38} = {C5794B02-61BF-4A9D-8651-4E34D2002E47}
 		{13551411-4B71-4D70-9583-8FAE6AF9CA98} = {39AD090E-29BF-4D99-8D6D-71F4F758620A}
-		{46F312F4-558B-4B36-8E22-74211FE5CBE2} = {C234BACE-7383-456B-8AE7-747AB5E83409}
 		{BF4CE76E-57AE-4791-B967-3C2CD62AD231} = {46F312F4-558B-4B36-8E22-74211FE5CBE2}
+		{46F312F4-558B-4B36-8E22-74211FE5CBE2} = {C234BACE-7383-456B-8AE7-747AB5E83409}
 		{DBA44094-8D45-4576-B5EB-29999F83905D} = {46F312F4-558B-4B36-8E22-74211FE5CBE2}
 		{7431E08E-6419-4486-A43E-194C111A95F6} = {46F312F4-558B-4B36-8E22-74211FE5CBE2}
 		{7142BA7C-E048-45D3-B40B-A6EF4A6800C7} = {C234BACE-7383-456B-8AE7-747AB5E83409}

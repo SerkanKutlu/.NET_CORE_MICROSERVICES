@@ -2,14 +2,56 @@ version: '3.4'
 
 services:
   customerserviceclean.api:
-    container_name: customerserviceclean.api
+    container_name: customerService
     image: ${DOCKER_REGISTRY-}customerservicecleanapi
     build:
       context: .
       dockerfile: CustomerServiceClean.API/Dockerfile
+
+  customerservice.kafkaconsumer:
+    container_name: dotnetkafkaconsumer
+    image: ${DOCKER_REGISTRY-}customerservicekafkaconsumer
+    build:
+      context: .
+      dockerfile: CustomerService.KafkaConsumer/Dockerfile
+
+
+  customerservice.rabbitconsumer:
+    container_name: dotnetrabbitconsumer
+    image: ${DOCKER_REGISTRY-}customerservicerabbitconsumer
+    build:
+      context: .
+      dockerfile: CustomerService.RabbitConsumer/Dockerfile
+
+
+  redissub:
+    container_name: dotnetredisconsumer
+    image: ${DOCKER_REGISTRY-}redissub
+    build:
+      context: .
+      dockerfile: RedisSub/Dockerfile
+
+
+  documentservice.api:
+    container_name: dotnetdocService
+    image: ${DOCKER_REGISTRY-}documentserviceapi
+    build:
+      context: .
+      dockerfile: DocumentService.API/Dockerfile
+
+
   gateway:
     container_name: gateway
     image: ${DOCKER_REGISTRY-}gateway
     build:
       context: .
       dockerfile: Gateway/Dockerfile
+
+
+  userservice.api:
+    container_name: dotnetuserService
+    image: ${DOCKER_REGISTRY-}userserviceapi
+    build:
+      context: .
+      dockerfile: UserService.API/Dockerfile
+
