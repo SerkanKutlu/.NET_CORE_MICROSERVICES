@@ -30,6 +30,16 @@ public class KafkaPublisher : IKafkaPublisher
         {
             Value = customerCreated
         };
-        await _producer.ProduceAsync(_kafkaSettings.OrderCreatedTopic, kafkaMessage);
+        await _producer.ProduceAsync(_kafkaSettings.CustomerCreatedTopic, kafkaMessage);
+    }
+
+    public async Task PublishToRetry(ConsumeResult<Null, CustomerCreated> message)
+    {
+        await _producer.ProduceAsync(_kafkaSettings.CustomerRetryTopic,message.Message);
+    }
+
+    public async Task PublishToError(ConsumeResult<Null, CustomerCreated> message)
+    {
+        await _producer.ProduceAsync(_kafkaSettings.CustomerFailedTopic,message.Message);
     }
 }

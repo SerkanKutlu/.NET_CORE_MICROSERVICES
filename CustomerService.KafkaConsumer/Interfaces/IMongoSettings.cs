@@ -1,4 +1,4 @@
-﻿namespace CustomerService.Consumer.Interfaces;
+﻿namespace CustomerService.KafkaConsumer.Interfaces;
 
 public interface IMongoSettings
 {

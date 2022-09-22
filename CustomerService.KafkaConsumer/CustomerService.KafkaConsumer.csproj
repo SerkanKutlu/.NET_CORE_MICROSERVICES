@@ -2,13 +2,13 @@
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <UserSecretsId>dotnet-CustomerService.Consumer-EE41BF9F-2139-4F01-A77E-740A52475017</UserSecretsId>
+        <UserSecretsId>dotnet-CustomerService.KafkaConsumer-0C9D041F-00FA-4467-B9A2-729F15380C93</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
-        <PackageReference Include="Serilog.Sinks.MongoDB" Version="5.1.5" />
     </ItemGroup>
 
     <ItemGroup>

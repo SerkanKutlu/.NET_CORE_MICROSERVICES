@@ -1,6 +1,6 @@
 ﻿{
   "profiles": {
-    "CustomerService.Consumer": {
+    "CustomerService.RabbitConsumer": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "environmentVariables": {

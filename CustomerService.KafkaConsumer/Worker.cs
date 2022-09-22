@@ -1,14 +1,11 @@
-using CustomerService.Consumer.Consumers;
-
-
-namespace CustomerService.Consumer;
+namespace CustomerService.KafkaConsumer;
 
 public class Worker : BackgroundService
 {
 
-    private readonly KafkaConsumer _consumer;
+    private readonly Consumers.KafkaConsumer _consumer;
 
-    public Worker(KafkaConsumer consumer)
+    public Worker(Consumers.KafkaConsumer consumer)
     {
         _consumer = consumer;
     }
@@ -18,8 +15,7 @@ public class Worker : BackgroundService
         
         while (!stoppingToken.IsCancellationRequested)
         {
-            _consumer.StartConsume();
+            await _consumer.StartMainConsume();
         }
     }
 }
-

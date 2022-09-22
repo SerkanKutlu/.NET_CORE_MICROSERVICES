@@ -49,7 +49,7 @@ public static class Bootstrapper
 
     private static void AddRepositories(IServiceCollection services, IConfiguration configuration)
     {
-        GenericMongo.Bootstrapper.AddGenericMongo<Customer>(services, settings =>
+        services.AddGenericMongo<Customer>(settings =>
         {
             settings.CollectionName = configuration.GetSection("MongoSettings")["CollectionName"];
             settings.ConnectionString = configuration.GetSection("MongoSettings")["ConnectionString"];
