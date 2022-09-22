@@ -3,8 +3,8 @@ using CustomerService.Infrastructure.Redis;
 using GenericMongo;
 using Microsoft.Extensions.Options;
 using RedisSub;
-using RedisSub.Entities;
 using RedisSub.Interfaces;
+using RedisSub.Models;
 using RedisSub.Repositories;
 
 IHost host = Host.CreateDefaultBuilder(args)

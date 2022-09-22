@@ -2,19 +2,21 @@ namespace CustomerService.RabbitConsumer;
 
 public class Worker : BackgroundService
 {
-    private readonly ILogger<Worker> _logger;
+    private readonly Consumers.RabbitConsumer _consumer;
 
-    public Worker(ILogger<Worker> logger)
+    public Worker(Consumers.RabbitConsumer consumer)
     {
-        _logger = logger;
+        _consumer = consumer;
     }
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        _consumer.StartConsumer();
         while (!stoppingToken.IsCancellationRequested)
         {
-            _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-            await Task.Delay(1000, stoppingToken);
+            
         }
+
+        return Task.CompletedTask;
     }
 }

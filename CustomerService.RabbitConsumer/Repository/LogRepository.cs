@@ -1,8 +1,8 @@
-﻿using GenericMongo.Bases;
+﻿using CustomerService.RabbitConsumer.Models;
+using GenericMongo.Bases;
 using GenericMongo.Interfaces;
-using RedisSub.Models;
 
-namespace RedisSub.Repositories;
+namespace CustomerService.RabbitConsumer.Repository;
 
 public class LogRepository : RepositoryBase<Log>
 {

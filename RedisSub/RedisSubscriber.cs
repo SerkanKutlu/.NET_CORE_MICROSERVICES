@@ -1,8 +1,8 @@
 ﻿using System.Text.Json;
-using CustomerService.Application.Dto;
+using CustomerService.Application.Events;
 using CustomerService.Application.Interfaces;
-using RedisSub.Entities;
 using RedisSub.Interfaces;
+using RedisSub.Models;
 using RedisSub.Repositories;
 using StackExchange.Redis;
 
@@ -26,23 +26,16 @@ public class RedisSubscriber : IRedisSubscriber
     {
         await _redisService.Subscriber.SubscribeAsync(_redisService.RedisSettings.ChannelName, (channel, msg) =>
         {
-            Console.WriteLine("message at main channel");
             _messageBatch.Add(msg);
-            var dto = JsonSerializer.Deserialize<CustomerForLogDto>(msg!);
-            var log = new Log
-            {
-                Id = Guid.NewGuid().ToString(),
-                LogMessage = $"Customer was {dto?.Action}.  {dto}",
-                CreatedAt = DateTime.UtcNow
-            };
+            var customerCreated = JsonSerializer.Deserialize<CustomerCreated>(msg!);
+            var log = new Log();
+            log.FillLogMessage(customerCreated);
             _logBatch.Add(log);
             if (_logBatch.Count >= 5)
             {
                 try
                 {
-                    //_logRepository.AddRangeAsync(_logBatch);
-                    throw new Exception("xx");
-
+                    _logRepository.AddRangeAsync(_logBatch);
                 }
                 catch (Exception e)
                 {
@@ -60,17 +53,11 @@ public class RedisSubscriber : IRedisSubscriber
 
         await _redisService.Subscriber.SubscribeAsync(_redisService.RedisSettings.RetryChannel, (channel, msg) =>
         {
-            Console.WriteLine("message at retry channel");
             Thread.Sleep(5000);
-            var dto = JsonSerializer.Deserialize<CustomerForLogDto>(msg!);
-            var log = new Log
-            {
-                Id = Guid.NewGuid().ToString(),
-                LogMessage = $"Customer was {dto?.Action}.  {dto}",
-                CreatedAt = DateTime.UtcNow
-            };
+            var customerCreated = JsonSerializer.Deserialize<CustomerCreated>(msg!);
+            var log = new Log();
+            log.FillLogMessage(customerCreated);
             _logRepository.AddAsync(log);
-
         });
     }
 }
