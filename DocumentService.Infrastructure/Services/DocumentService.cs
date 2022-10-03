@@ -1,8 +1,12 @@
 ﻿using System.IO.Compression;
 using Core.Dto;
 using Core.Entity;
+using Core.Events;
 using Core.Exceptions;
 using Core.Interfaces;
+using Hangfire;
+using Hangfire.Mongo;
+using Hangfire.Storage;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,11 +17,13 @@ public class DocumentService : IDocumentService
     private readonly IDocumentRepository _documentRepository;
     private readonly IFileHelper _fileHelper;
     private readonly IAuthHelper _authHelper;
-    public DocumentService(IDocumentRepository documentRepository, IFileHelper fileHelper, IAuthHelper authHelper)
+    private readonly IKafkaPublisher _kafkaPublisher;
+    public DocumentService(IDocumentRepository documentRepository, IFileHelper fileHelper, IAuthHelper authHelper, IKafkaPublisher kafkaPublisher)
     {
         _documentRepository = documentRepository;
         _fileHelper = fileHelper;
         _authHelper = authHelper;
+        _kafkaPublisher = kafkaPublisher;
     }
 
     public async Task<FileContentResult> DownloadAllFiles(HttpContext httpContext)
@@ -98,16 +104,24 @@ public class DocumentService : IDocumentService
                 var document = await _fileHelper.UploadFiles(file,httpContext);
                 await _documentRepository.AddAsync(document);
                 createdDocuments.Add(file.FileName,document.Id);
+                var documentUploaded = new DocumentUploaded(document.Id,DateTime.UtcNow);
+                var options = new RecurringJobOptions
+                {
+                    TimeZone = TimeZoneInfo.Local
+                };
+                RecurringJob.AddOrUpdate(Guid.NewGuid().ToString(),()=>_kafkaPublisher.Publish(documentUploaded),"0 18,0,12,6 * * *",options);
             }
         }
         if (!createdDocuments.Any())
         {
             throw new DocumentNotSelectedException();
         }
+
         return new UploadResultDto
         {
             UploadedDocuments = createdDocuments
         };
         
     }
+    
 }

@@ -1,8 +1,7 @@
-﻿using System.Net;
+﻿using Microsoft.Extensions.Logging;
+using System.Net;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using UserService.Core.Exceptions;
-
 namespace UserService.Core.Middlewares;
 
 public class ExceptionMiddleware
@@ -32,7 +31,7 @@ public class ExceptionMiddleware
         }
     }
     
-    private async Task HandleCustomExceptionAsync(HttpContext httpContext, CustomExceptionBase ex)
+    private async Task HandleCustomExceptionAsync(Microsoft.AspNetCore.Http.HttpContext httpContext, CustomExceptionBase ex)
     {
         _logger.LogInformation($"Custom exception handled: {ex.ErrorDetails.Message}");
         httpContext.Response.ContentType = "application/json";
@@ -40,7 +39,7 @@ public class ExceptionMiddleware
         await httpContext.Response.WriteAsync(ex.ToString());
     }
 
-    private async Task HandleExceptionAsync(HttpContext httpContext, Exception ex)
+    private async Task HandleExceptionAsync(Microsoft.AspNetCore.Http.HttpContext httpContext, Exception ex)
     {
         _logger.LogError($"ERROR OCCURED: {ex.Message}");
         httpContext.Response.ContentType = "application/json";

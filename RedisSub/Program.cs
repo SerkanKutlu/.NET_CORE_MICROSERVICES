@@ -10,8 +10,9 @@ using RedisSub.Repositories;
 IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices(services =>
     {
+        var environmentName = Environment.GetEnvironmentVariables()["DOTNET_ENVIRONMENT"];
         var configuration = new ConfigurationBuilder()
-            .AddJsonFile($"appsettings.json",optional:false)
+            .AddJsonFile($"appsettings.{environmentName}.json", optional: false)
             .Build();
         services.AddHostedService<Worker>();
         //Redis

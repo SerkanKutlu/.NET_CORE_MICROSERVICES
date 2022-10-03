@@ -7,15 +7,12 @@
 
     <ItemGroup>
       <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+      <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
       <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="6.0.7" />
       <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="6.0.0" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Reference Include="Microsoft.AspNetCore.Http.Abstractions, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60">
-        <HintPath>..\..\..\..\..\..\..\..\..\Program Files\dotnet\shared\Microsoft.AspNetCore.App\6.0.6\Microsoft.AspNetCore.Http.Abstractions.dll</HintPath>
-      </Reference>
-    </ItemGroup>
+ 
 
     <ItemGroup>
       <ProjectReference Include="..\GenericMongo\GenericMongo.csproj" />

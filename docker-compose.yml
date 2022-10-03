@@ -46,12 +46,20 @@ services:
     build:
       context: .
       dockerfile: Gateway/Dockerfile
-
+  customerservice.denemeworker:
+    image: ${DOCKER_REGISTRY-}customerservicedenemeworker
+    build:
+      context: .
+      dockerfile: CustomerService.DenemeWorker/Dockerfile
 
   userservice.api:
-    container_name: dotnetuserService
     image: ${DOCKER_REGISTRY-}userserviceapi
     build:
       context: .
       dockerfile: UserService.API/Dockerfile
+
+networks:
+  default:
+    name: tesodev
+    external: true
 

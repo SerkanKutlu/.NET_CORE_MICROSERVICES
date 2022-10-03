@@ -3,14 +3,12 @@ version: '3.4'
 services:
   customerserviceclean.api:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - MongoSettings:ConnectionString=mongodb://root:155202Asd...@mongodb:27017
-      - HttpClientProperty:DeleteOrderUrl=https://gateway/order/customer
+      - ASPNETCORE_ENVIRONMENT=Production
     ports:
       - "8000:80"
   documentservice.api:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Production
     ports:
       - "8001:80"
   gateway:
@@ -18,8 +16,27 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
     ports:
       - "5005:80"
+  customerservice.kafkaconsumer:
+    container_name: dotnetkafkaconsumer
+    environment:
+      - DOTNET_ENVIRONMENT=Production
+    
+  customerservice.rabbitconsumer:
+    container_name: dotnetrabbitconsumer
+    depends_on:
+      - customerserviceclean.api
+    environment:
+      - DOTNET_ENVIRONMENT=Production
+      
+  redissub:
+    container_name: dotnetredisconsumer
+    depends_on:
+      - customerserviceclean.api
+    environment:
+      - DOTNET_ENVIRONMENT=Production
+      
   userservice.api:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Production
     ports:
       - "8002:80"

@@ -17,8 +17,8 @@ public class RabbitPublisher : IRabbitPublisher
         _rabbitSettings = rabbitSettings;
         var connectionFactory = new ConnectionFactory
         {
-            HostName = "localhost",
-            Port = 5672
+            HostName = rabbitSettings.Host,
+            Port = rabbitSettings.Port,
         };
         var connection = connectionFactory.CreateConnection();
         _channel = connection.CreateModel();
@@ -28,8 +28,8 @@ public class RabbitPublisher : IRabbitPublisher
     }
     public void Publish(CustomerCreated customerCreated)
     {
-        var message = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(customerCreated));
-        _channel.BasicPublish(exchange: _rabbitSettings.Exchange, routingKey: _rabbitSettings.RoutingKey, body: message,basicProperties:_basicProperties);
-        
+            var message = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(customerCreated));
+            _channel.BasicPublish(exchange: _rabbitSettings.Exchange, routingKey: _rabbitSettings.RoutingKey, body: message,basicProperties:_basicProperties);
+            
     }
 }

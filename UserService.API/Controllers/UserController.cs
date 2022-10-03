@@ -1,8 +1,6 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UserService.Core.DTO;
-using UserService.Core.Entity;
 using UserService.Core.Interfaces;
 namespace UserService.API.Controllers;
 

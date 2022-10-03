@@ -5,10 +5,10 @@ namespace CustomerService.RabbitConsumer.Models;
 
 public class Log : BaseEntity
 {
-    public string LogMessage { get; set; }
+    private string? _logMessage;
     public void FillLogMessage(CustomerCreated? createdEvent)
     {
-        LogMessage = $"Customer Created: {createdEvent?.Id}, {createdEvent?.Address} ...";
+        _logMessage = $"Customer Created: {createdEvent?.Id}, {createdEvent?.Address} ...";
     }
 }
 

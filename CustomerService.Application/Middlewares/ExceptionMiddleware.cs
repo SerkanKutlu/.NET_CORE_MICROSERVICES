@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 
+
 namespace CustomerService.Application.Middlewares;
 
 public class ExceptionMiddleware

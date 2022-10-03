@@ -18,7 +18,7 @@ public class AuthMiddleware
     {
         var userClaims = ((ClaimsIdentity)httpContext.User.Identity)?.Claims.ToList();
         var userId  = userClaims?.FirstOrDefault(c => c.Type == "UserId")?.Value;
-        var response = _factory.CreateClient().GetAsync($"https://localhost:7181/api/User/validate/token/{userId}").Result;
+        var response = _factory.CreateClient().GetAsync($"http://gouserservice:4001/api/User/validate/token/{userId}").Result;
         if(response.IsSuccessStatusCode)
             await _next(httpContext);
         else

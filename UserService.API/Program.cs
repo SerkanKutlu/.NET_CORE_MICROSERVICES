@@ -12,7 +12,10 @@ using UserService.Infrastructure.Repository; //Only for dependency
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+var environmentName = builder.Environment.EnvironmentName;
+builder.Configuration.SetBasePath(builder.Environment.ContentRootPath)
+    .AddJsonFile($"appsettings.{environmentName}.json", false, true)
+    .AddEnvironmentVariables();
 
 builder.Services.AddControllers();
 
@@ -77,12 +80,13 @@ builder.Services.AddScoped<ITokenRepository,TokenRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
+// if (app.Environment.IsDevelopment())
+// {
+//     app.UseSwagger();
+//     app.UseSwaggerUI();
+// }
+app.UseSwagger();
+app.UseSwaggerUI();
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseHttpsRedirection();
 

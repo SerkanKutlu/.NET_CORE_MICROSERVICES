@@ -7,12 +7,15 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Hangfire" Version="1.8.0-rc1" />
+      <PackageReference Include="Hangfire.Mongo" Version="1.7.3" />
       <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
       <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
       <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="6.0.0" />
         <PackageReference Include="Aspose.Words" Version="22.8.0" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.2.3" />
+        <PackageReference Include="Confluent.Kafka" Version="1.9.2" />
     </ItemGroup>
 
     <ItemGroup>

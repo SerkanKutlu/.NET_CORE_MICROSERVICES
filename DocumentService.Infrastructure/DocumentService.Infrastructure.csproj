@@ -9,8 +9,4 @@
       <ProjectReference Include="..\DocumentService.Core\DocumentService.Core.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-
-    </ItemGroup>
-
 </Project>

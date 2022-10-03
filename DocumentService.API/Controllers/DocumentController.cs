@@ -1,4 +1,6 @@
 ﻿using Core.Interfaces;
+using Hangfire;
+using Hangfire.Storage;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,11 +16,12 @@ public class DocumentController : ControllerBase
         _documentService = documentService;
     }
 
+   
+    
     [HttpGet("Show")]
     [Authorize(Roles="Admin,User,Viewer")]
     public async Task<IActionResult> ShowAll()
     {
-        return Ok("role based gecildi");
         var result =await _documentService.ShowAll(HttpContext);
         return Ok(result);
     }

@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "CustomerService.DenemeWorker": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      },
+      "dotnetRunMessages": true
+    },
+    "Docker (1)": {
+      "commandName": "Docker"
+    }
+  }
+}
