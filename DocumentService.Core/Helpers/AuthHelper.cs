@@ -18,8 +18,8 @@ public class AuthHelper:IAuthHelper
     public bool IsAuthenticated(HttpContext httpContext, string id)
     {
         var userClaims = ((ClaimsIdentity)httpContext.User.Identity)?.Claims.ToList();
-        var role = userClaims?.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
-        var userId  = userClaims?.FirstOrDefault(c => c.Type == ClaimTypes.PrimarySid)?.Value;
+        var role = userClaims?.FirstOrDefault(c => c.Type == "Role")?.Value;
+        var userId  = userClaims?.FirstOrDefault(c => c.Type == "UserId")?.Value;
         return (role == "User" && userId == id) || role == "Admin";
         
 

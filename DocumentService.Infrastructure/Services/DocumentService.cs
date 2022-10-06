@@ -1,12 +1,9 @@
 ﻿using System.IO.Compression;
 using Core.Dto;
 using Core.Entity;
-using Core.Events;
 using Core.Exceptions;
 using Core.Interfaces;
-using Hangfire;
-using Hangfire.Mongo;
-using Hangfire.Storage;
+using DocumentService.Infrastructure.Hangfire;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,13 +14,13 @@ public class DocumentService : IDocumentService
     private readonly IDocumentRepository _documentRepository;
     private readonly IFileHelper _fileHelper;
     private readonly IAuthHelper _authHelper;
-    private readonly IKafkaPublisher _kafkaPublisher;
-    public DocumentService(IDocumentRepository documentRepository, IFileHelper fileHelper, IAuthHelper authHelper, IKafkaPublisher kafkaPublisher)
+    private readonly JobService _jobService;
+    public DocumentService(IDocumentRepository documentRepository, IFileHelper fileHelper, IAuthHelper authHelper, JobService jobService)
     {
         _documentRepository = documentRepository;
         _fileHelper = fileHelper;
         _authHelper = authHelper;
-        _kafkaPublisher = kafkaPublisher;
+        _jobService = jobService;
     }
 
     public async Task<FileContentResult> DownloadAllFiles(HttpContext httpContext)
@@ -85,6 +82,7 @@ public class DocumentService : IDocumentService
         {
             throw new DocumentNotFoundException();
         }
+        _jobService.RemoveDeletedJob(docId);
     }
 
     public async Task<UploadResultDto> Upload(HttpContext httpContext)
@@ -104,12 +102,7 @@ public class DocumentService : IDocumentService
                 var document = await _fileHelper.UploadFiles(file,httpContext);
                 await _documentRepository.AddAsync(document);
                 createdDocuments.Add(file.FileName,document.Id);
-                var documentUploaded = new DocumentUploaded(document.Id,DateTime.UtcNow);
-                var options = new RecurringJobOptions
-                {
-                    TimeZone = TimeZoneInfo.Local
-                };
-                RecurringJob.AddOrUpdate(Guid.NewGuid().ToString(),()=>_kafkaPublisher.Publish(documentUploaded),"0 18,0,12,6 * * *",options);
+                _jobService.AddLogJob(document.Id);
             }
         }
         if (!createdDocuments.Any())

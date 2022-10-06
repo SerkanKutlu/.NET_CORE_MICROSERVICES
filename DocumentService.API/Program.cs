@@ -81,5 +81,4 @@ app.UseAuthorization();
 //app.UseCustomAuthMiddleware();
 
 app.MapControllers();
-Bootstrapper.StartNecessaryJobs();
 app.Run();

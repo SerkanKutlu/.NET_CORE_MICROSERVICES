@@ -1,4 +1,5 @@
-﻿using Core.Interfaces;
+﻿using Core.Events;
+using Core.Interfaces;
 using Hangfire;
 using Hangfire.Storage;
 using Microsoft.AspNetCore.Authorization;
@@ -16,7 +17,20 @@ public class DocumentController : ControllerBase
         _documentService = documentService;
     }
 
-   
+    // [HttpGet("deenemeee/{value}")]
+    // public IActionResult Deneme(int value)
+    // {
+    //     var monitor = JobStorage.Current.GetMonitoringApi();
+    //     var scheduledJobs = monitor.ScheduledJobs(0, int.MaxValue);
+    //     foreach (var job in scheduledJobs)
+    //     {
+    //         var jobArg = (DocumentUploaded)job.Value.Job.Args[0];
+    //         if jobArg
+    //
+    //     }
+    //
+    //     return Ok(1);
+    // }
     
     [HttpGet("Show")]
     [Authorize(Roles="Admin,User,Viewer")]

@@ -2,6 +2,7 @@
 using Core.Helpers;
 using Core.Interfaces;
 using Core.Middlewares;
+using DocumentService.Infrastructure.Hangfire;
 using DocumentService.Infrastructure.Kafka;
 using DocumentService.Infrastructure.Repository;
 using GenericMongo;
@@ -9,7 +10,6 @@ using Hangfire;
 using Hangfire.Mongo;
 using Hangfire.Mongo.Migration.Strategies;
 using Hangfire.Mongo.Migration.Strategies.Backup;
-using Hangfire.Storage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -74,12 +74,13 @@ public static class Bootstrapper
         //Hangfire
         var migrationOptions = new MongoMigrationOptions
         {   
-            MigrationStrategy = new MigrateMongoMigrationStrategy(),
-            BackupStrategy = new CollectionMongoBackupStrategy()
+            MigrationStrategy =new ThrowMongoMigrationStrategy(),// new MigrateMongoMigrationStrategy(), 
+            BackupStrategy = new NoneMongoBackupStrategy()
         };
         var storageOptions = new MongoStorageOptions
         {
-            CheckQueuedJobsStrategy = CheckQueuedJobsStrategy.TailNotificationsCollection,
+            CheckQueuedJobsStrategy = CheckQueuedJobsStrategy.TailNotificationsCollection ,
+            //Watch is for replica sets only. 
             MigrationOptions = migrationOptions
         };
         services.AddHangfire(config => config.UseMongoStorage(configuration.GetSection("MongoSettings")["HangfireConnectionString"],storageOptions));
@@ -88,6 +89,9 @@ public static class Bootstrapper
         
         //Kafka
         services.AddSingleton<IKafkaPublisher, KafkaPublisher>();
+        
+        //Hanfire
+        services.AddSingleton<JobService>();
     }
     
 
@@ -105,24 +109,5 @@ public static class Bootstrapper
 
     }
 
-    public static void StartNecessaryJobs()
-    {
-        var options = new RecurringJobOptions
-        {
-            TimeZone = TimeZoneInfo.Local
-        };
-        RecurringJob.AddOrUpdate("remover",()=>DeleteExecutedJobs(),"10 18,0,12,6 * * *",options);
-    }
-    
-    public static void DeleteExecutedJobs()
-    {
-        var jobs = JobStorage.Current.GetConnection().GetRecurringJobs();
-        foreach (var job in jobs)
-        {
-            if (job.Id != "remover" && job.LastExecution.ToString() != "")
-            {
-                RecurringJob.RemoveIfExists(job.Id);
-            }
-        }
-    }
+  
 }
