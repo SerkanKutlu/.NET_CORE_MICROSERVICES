@@ -15,10 +15,10 @@ public class KafkaPublisher : IKafkaPublisher
         var options = new Dictionary<string, string>
         {
             {"bootstrap.servers", _kafkaSettings.BootstrapServer},
-            {"security.protocol", _kafkaSettings.SASLProtocol},
-            {"sasl.mechanisms", _kafkaSettings.SASLMechanism},
-            {"sasl.username", _kafkaSettings.SASLUsername},
-            {"sasl.password", _kafkaSettings.SASLPassword}
+           // {"security.protocol", _kafkaSettings.SASLProtocol},
+           // {"sasl.mechanisms", _kafkaSettings.SASLMechanism},
+           // {"sasl.username", _kafkaSettings.SASLUsername},
+            //{"sasl.password", _kafkaSettings.SASLPassword}
         };
         var clientConfig = new ClientConfig(options);
         var producerConfig = new ProducerConfig(clientConfig);

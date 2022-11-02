@@ -15,17 +15,26 @@ public class CustomerService : ICustomerService
     private readonly ILogger<CustomerService> _logger;
     private readonly ICustomerRepository _customerRepository;
     private readonly ICustomerHelper _customerHelper;
-    private readonly IRedisPublisher _redisPublisher;
+    //private readonly IRedisPublisher _redisPublisher;
     private readonly IKafkaPublisher _kafkaPublisher;
-    private readonly IRabbitPublisher _rabbitPublisher;
-    public CustomerService(ICustomerHelper customerHelper, ICustomerRepository customerRepository,ILogger<CustomerService> logger,IRedisPublisher redisPublisher, IKafkaPublisher kafkaPublisher, IRabbitPublisher rabbitPublisher)
+    //private readonly IRabbitPublisher _rabbitPublisher;
+    // public CustomerService(ICustomerHelper customerHelper, ICustomerRepository customerRepository,ILogger<CustomerService> logger,IRedisPublisher redisPublisher, IKafkaPublisher kafkaPublisher, IRabbitPublisher rabbitPublisher)
+    // {
+    //     _customerHelper = customerHelper;
+    //     _customerRepository = customerRepository;
+    //     _logger = logger;
+    //     //_redisPublisher = redisPublisher;
+    //     _kafkaPublisher = kafkaPublisher;
+    //    // _rabbitPublisher = rabbitPublisher;
+    // }
+    public CustomerService(ICustomerHelper customerHelper, ICustomerRepository customerRepository,ILogger<CustomerService> logger,IKafkaPublisher kafkaPublisher)
     {
         _customerHelper = customerHelper;
         _customerRepository = customerRepository;
         _logger = logger;
-        _redisPublisher = redisPublisher;
+        //_redisPublisher = redisPublisher;
         _kafkaPublisher = kafkaPublisher;
-        _rabbitPublisher = rabbitPublisher;
+        // _rabbitPublisher = rabbitPublisher;
     }
 
     public async Task<PagedList<Customer>> GetPagedCustomers(RequestParameters requestParameters, HttpContext context)
@@ -67,8 +76,8 @@ public class CustomerService : ICustomerService
         var customerCreated = new CustomerCreated();
         customerCreated.FillWithCustomer(customer);
         await _kafkaPublisher.Publish(customerCreated);
-        await _redisPublisher.Publish(customerCreated);
-        _rabbitPublisher.Publish(customerCreated);
+       // await _redisPublisher.Publish(customerCreated);
+       // _rabbitPublisher.Publish(customerCreated);
         return customer.Id;
     }
 
